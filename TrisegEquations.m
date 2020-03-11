@@ -1,12 +1,9 @@
 function f = TrisegEquations(x,Vw_LV,Vw_SEP,Vw_RV,SL_LV,SL_SEP,SL_RV, V_LV, V_RV,Amref_LV,Amref_SEP,Amref_RV)
 
-
 xm_LV  = x(1); % LV heart geometry variable, cm
 xm_SEP = x(2); % septum heart geometry variable, cm
 xm_RV  = x(3); % RV heart geometry variable, cm
 ym     = x(4); % Heart geometry variable, cm
-
-
 
 Lsref     = 1.9; % Resting SL, micron
 Kse       = 50000; % series element elastance, mmHg/micron (Changed to match the value in Tewari's code) (9/5 BM)

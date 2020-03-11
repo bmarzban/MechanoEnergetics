@@ -1,6 +1,7 @@
 % subroutine plot TriSeg circles as a function of the time
 function PlotTriSeg(xm_LV1,xm_SEP1,xm_RV1,ym1,t)
- for i = 1: length(t)
+
+for i = 1: length(t)
  xm_LV  = xm_LV1(i) ; % LV heart geometry variable, cm
  xm_SEP = xm_SEP1(i); % septum heart geometry variable, cm
  xm_RV  = xm_RV1(i); % RV heart geometry variable, cm
