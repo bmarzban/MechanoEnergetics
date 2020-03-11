@@ -299,7 +299,7 @@ V_PA   = Y(:,46); % volume of pulmonary arterys
 V_Ao   = Y(:,47); % volume of proximal aorta
 V_T = V_LV + V_RV + V_SV + V_PV + V_SA + V_PA + V_Ao;
 
-PlotTriSeg(xm_LV,xm_SEP,xm_RV,ym,t)
+% PlotTriSeg(xm_LV,xm_SEP,xm_RV,ym,t)
 %  Pulmonary Pressures
 P_PV = V_PV/C_PV;
 P_SV = V_SV/C_SV;
