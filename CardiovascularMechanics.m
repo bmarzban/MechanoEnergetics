@@ -69,7 +69,7 @@ end
 % adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
 % adjvar = [1.02 1.0 0.94 0.72 1.26 1/2 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
 
-adjvar = [1 1 1 0.732 1 1 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
+adjvar = [1 1 1 0.77 1.22 1.18 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
 
 tune_ATPase_LV =  1.3203* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
@@ -222,7 +222,7 @@ M(3,3) = 0;
 M(4,4) = 0; 
 input = [CO_target stim_period Vw_LV Vw_SEP Vw_RV R_TAC MgATP_LV MgADP_LV Pi_LV MgATP_SEP MgADP_SEP Pi_SEP MgATP_RV MgADP_RV Pi_RV A_HR B_HR C_HR Ca0_HR Amref_LV Amref_SEP Amref_RV];
 options = odeset('Mass',M,'RelTol',1e-6,'AbsTol',1e-6,'MaxStep',stim_period/50);
-[ts,ys] = ode15s(@dXdT_cardiovascular_mechanics,[0 200*stim_period],init,options,adjvar,input);
+[ts,ys] = ode15s(@dXdT_cardiovascular_mechanics,[0 120*stim_period],init,options,adjvar,input);
 % V_LV   = ys(:,8); % volume LV, mL
 % V_RV   = ys(:,9); % volume RV, mL
 % V_SV   = ys(:,43); % volume of systemic veins
