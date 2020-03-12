@@ -33,6 +33,7 @@ R_TAC = input(6); % resistance of TAC , mmHg*sec/mL
 
 Lsref     = 1.9; % Resting SL, micron
 eta       = 0.1; % visconsity, mmHg s /micron
+L_rest_passive = 0.9;
 
 % Sarcomere geometry parameters
 L_thick = 1.67; % Length of thick filament, um
@@ -55,8 +56,8 @@ k_on =   49.045; % Campbell et al, Biophysical Journal 2018
 k_off = 184.464; % manually tuned parameter!
 
 % transitions between super relaxed state and non relaxed state
-k1sr = adjvar(5)*  20.485;
-kforce = adjvar(6)*2.752/7.5;  %dived by kPa to mmHg conversion rate
+k1sr = adjvar(5)*  63.75;
+kforce = adjvar(6)*3.5092/7.5;  %dived by kPa to mmHg conversion rate
 k2sr =   226.54; % made-up number
 
 
@@ -90,7 +91,7 @@ km2     = 43.25;% transition A3 to A2 rate constant, 1/sec
 k3      = 142.23; % transition A3 to P rate constant, 1/sec
 alpha1  = 10.0; % Stretch sensing parameter for k1 and k?1, 1/um
 alpha2  = 9.1; % Stretch sensing parameter for k2 and k?2, 1/um
-alpha3  =  0.4*59.3; % Stretch sensing parameter for k3, 1/um
+alpha3  =  0.1*59.3; % Stretch sensing parameter for k3, 1/um
 s3      = 9.9e-3;  % Strain at which k3 is minimum, um
 % 
 % ka      = 681.1559*1.1; % myosin-actin attach rate constant, 1/sec
@@ -107,13 +108,13 @@ s3      = 9.9e-3;  % Strain at which k3 is minimum, um
 % s3      = 9.9e-3;  % Strain at which k3 is minimum, um
 % 
 
-% kstiff1 = 20000; % kPa/um (9/5 BM)
-% kstiff2 = 375000; % kPa/um (9/5 BM)
-% k_passive =40; % mN / mm^2 / micron
+kstiff1 = 20000; % kPa/um (9/5 BM)
+kstiff2 = 1.05*375000; % kPa/um (9/5 BM)
+k_passive = 40; % mN / mm^2 / micron
 
-kstiff1 = 2*3.3095e+03 *7.5; % kPa/um (9/5 BM)
-kstiff2 = 2*6.2053e+04*7.5; % kPa/um (9/5 BM)
- k_passive =40; % mN / mm^2 / micron
+% kstiff1 = 2*3.3095e+03 *7.5; % kPa/um (9/5 BM)
+% kstiff2 = 2*6.2053e+04*7.5; % kPa/um (9/5 BM)
+%  k_passive =40; % mN / mm^2 / micron
 
 % correcting rate constants for metabolite levels in LV, SEP, and RV
 kd_LV  = kd*(Pi_LV/K_Pi)/(1.0 + Pi_LV/K_Pi);
@@ -132,11 +133,12 @@ km2_RV = km2*(MgADP_RV/K_D)/(1.0 + MgADP_RV/K_D + MgATP_RV/K_T);
 k3_RV  = k3*(MgATP_RV/K_T)/(1.0 + MgATP_RV/K_T + MgADP_RV/K_D);
 
 % Lumped circulatory parameters
-C_Ao = 0.4*CO_target/50/HR;  % Proximal aortic compliance, mL/mmHg
-C_SA = 1.4*CO_target/50/HR; % Systemic arterial compliance, mL/mmHg
+C_Ao = 0.0022045;  % Proximal aortic compliance, mL/mmHg
+C_SA = 0.0077157; % Systemic arterial compliance, mL/mmHg
+
 C_SV = 2.5; % Systemic venous compliance, mL/mmHg  DAB 10/7/2018
 C_PV = 0.25; % Pulmonary venous compliance, mL/mmHg
-C_PA = CO_target/20/HR; % Pulmonary arterial compliance, mL/mmHg
+C_PA = 0.013778; % Pulmonary arterial compliance, mL/mmHg
 R_Ao   = 2.5; % resistance of aorta , mmHg*sec/mL
 R_SA   = adjvar(7)*88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
 % R_SA   = adjvar(7)*2.25*88/CO_target*60;% mmHg*sec/mL; %  TAC #1
@@ -240,10 +242,9 @@ sigma_collagen_LV  = PConcollagen*(exp(PExpcollagen*(SLo_LV - SLcollagen)) - 1).
 sigma_collagen_SEP = PConcollagen*(exp(PExpcollagen*(SLo_SEP - SLcollagen)) - 1).*(SLo_SEP > SLcollagen);
 sigma_collagen_RV  = PConcollagen*(exp(PExpcollagen*(SLo_RV - SLcollagen)) - 1).*(SLo_RV > SLcollagen);
 
-
-sigmapas_LV  = k_passive*(SLo_LV/2-Lsref/2)  + sigma_collagen_LV ;
-sigmapas_SEP = k_passive*(SLo_SEP/2-Lsref/2) + sigma_collagen_SEP;
-sigmapas_RV  = k_passive*(SLo_RV/2-Lsref/2)   + sigma_collagen_RV;
+sigmapas_LV  = k_passive*(SLo_LV/2-L_rest_passive)  + sigma_collagen_LV ;
+sigmapas_SEP = k_passive*(SLo_SEP/2-L_rest_passive) + sigma_collagen_SEP;
+sigmapas_RV  = k_passive*(SLo_RV/2-L_rest_passive)   + sigma_collagen_RV;
 
 % Sarcomere geometry
 sovr_ze = min(L_thick*0.5, SL_LV*0.5);

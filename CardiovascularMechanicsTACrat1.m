@@ -87,9 +87,9 @@ tune_ATPase_LV = 0.5529* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
 
-Amref_LV  = adjvar(1)*1.95 ; % LV midwall reference surface area, cm^2
-Amref_SEP = adjvar(2)*Amref_LV*(47/80) ; % SEP midwall reference surface area, cm^2
-Amref_RV  = adjvar(3)*3.05 ; % RV midwall reference surface area, cm^2
+Amref_LV  = adjvar(1) * 2.077 ; % LV midwall reference surface area, cm^2
+Amref_SEP = adjvar(2) * Amref_LV * 0.590 ; % SEP midwall reference surface area, cm^2
+Amref_RV  = adjvar(3) * 3.3 ; % RV midwall reference surface area, cm^2
 
 Vw_LV = (LVW*2/3)/1000/1.05;
 Vw_SEP =(LVW/3)/1000/1.05;
@@ -128,7 +128,7 @@ Lsref = 1.9;
 k3      = 142.23; % transition A3 to P rate constant, 1/sec
 K_T = 0.4897; 
 K_D = 0.194;% Used the values from Tewari etal JMCC (9/5 BM)
-alpha3  = 0.4*59.3; % Stretch sensing parameter for k3, 1/um
+alpha3  = 0.1*59.3; % Stretch sensing parameter for k3, 1/um
 s3      = 9.9e-3;  % Strain at which k3 is minimum, um
 
 %% Extract Ca coeficient based on the Ca data for diferent simulation 
@@ -217,11 +217,11 @@ x = fsolve(@TrisegEquations,init(1:4),opts,Vw_LV,Vw_SEP,Vw_RV,SL_LV,SL_SEP,SL_RV
 init(1:4) = x;
 
 % Lumped circulatory parameters
-C_Ao = 0.4*CO_target/50/HR;  % Proximal aortic compliance, mL/mmHg
-C_SA = 1.4*CO_target/50/HR; % Systemic arterial compliance, mL/mmHg
+C_Ao = 0.0022045;  % Proximal aortic compliance, mL/mmHg
+C_SA = 0.0077157; % Systemic arterial compliance, mL/mmHg
 C_SV = 2.5; % Systemic venous compliance, mL/mmHg  DAB 10/7/2018
 C_PV = 0.25; % Pulmonary venous compliance, mL/mmHg
-C_PA = CO_target/20/HR; % Pulmonary arterial compliance, mL/mmHg
+C_PA = 0.013778; % Pulmonary arterial compliance, mL/mmHg
 R_Ao   = 2.5; % resistance of aorta , mmHg*sec/mL
 R_SA   =  adjvar(7)*88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
 % R_SA   = 2.25*88/CO_target*60;% mmHg*sec/mL; %  TAC #1
