@@ -69,7 +69,12 @@ end
 % adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
 % adjvar = [1.02 1.0 0.94 0.72 1.26 1/2 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
 
-adjvar = [1 1 1 0.77 1.22 1.18 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
+% adjvar = [1 1 1 0.77 1.22 1.18 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
+%% para set 2
+% adjvar = [1.005 1 1.02 0.938 1.06 1. 1.0]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
+
+%% para set 4
+ adjvar = [1.02 1 1.02 1.105 1.09 1.09 1.0]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
 
 tune_ATPase_LV =  1.3203* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
@@ -79,11 +84,16 @@ Amref_LV  = adjvar(1) * 2.077 ; % LV midwall reference surface area, cm^2
 Amref_SEP = adjvar(2) * Amref_LV * 0.590 ; % SEP midwall reference surface area, cm^2
 Amref_RV  = adjvar(3) * 3.3 ; % RV midwall reference surface area, cm^2
 
+% Assign initial condtion for LV and RV
+
+% V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+% V_RV  = edLV_target/1000;%
+V_LV  = 0.5;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+V_RV  = 0.5;%
+
 Vw_LV = (LVW*2/3)/1000/1.05;
 Vw_SEP =(LVW/3)/1000/1.05;
 Vw_RV = RVW/1000/1.05;
-
-
 
 %% Run the energetics model to get the metabolite concentrations
 
@@ -107,7 +117,7 @@ Vw_RV = RVW/1000/1.05;
 
 %% Run cardiovascular mechanics model
 Lsref = 1.9;
-k3      = 142.23; % transition A3 to P rate constant, 1/sec
+k3      = 144.5586; % transition A3 to P rate constant, 1/sec
 K_T = 0.4897; 
 K_D = 0.194;% Used the values from Tewari etal JMCC (9/5 BM)
 alpha3  =      0.1*59.3; % Stretch sensing parameter for k3, 1/um
@@ -141,10 +151,6 @@ SL_LV  = 2.2;
 SL_SEP = 2.2;
 SL_RV  = 2.2;
 
-V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-V_RV  = edLV_target/1000;%
-% V_LV  = 0.5;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-% V_RV  = 0.5;%
 
 V_SA = adjvar(4)*3.0;
 V_SV = adjvar(4)*4.80;
@@ -398,8 +404,8 @@ Vw_SEP_W= (1/3)*LVW/1000;
 rate_of_XB_turnover_ave = (Vw_LV_W*mean(r_LV) + Vw_SEP_W*mean(r_SEP))/(Vw_LV_W + Vw_SEP_W) 
 
 % unit convert to oxygen consumption
-ATP_ase_mechannics_Averge_LV_SEP = (1.3203/3.2179)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-ATP_ase_mechannics_RV = (1.3203/3.2179)*mean(r_RV)
+ATP_ase_mechannics_Averge_LV_SEP = (1.3203/5.2179)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
+ATP_ase_mechannics_RV = (1.3203/5.2179)*mean(r_RV)
 
 % NA = 6.023e23; % Avogadro's number; per mol
 % nXB = 1e14*0.36e3; % No. of XBs per g muscle; Barclay etal Prog Biophys Mol Biol. 2010 Jan;102(1):53-71

@@ -41,25 +41,6 @@ L_hbare = 0.10; % Length of bare region of thick filament, um
 L_thin  = 1.20; % Length of thin filament, um
 deltaR  = 0.010; % um
 % 
-% K_coop =     6.0; % Campbell et al, Biophysical Journal 2018,
-% k_on =  50; % Campbell et al, Biophysical Journal 2018
-% k_off = 0.9*200; % manually tuned parameter!
-% 
-% % transitions between super relaxed state and non relaxed state
-% k1sr = adjvar(5)* 1.54*15;
-% kforce = adjvar(6)* 1.140*0.15;  %dived by kPa to mmHg conversion rate
-% k2sr = 150; % made-up number
-% 
-
-K_coop =     11.659; % Campbell et al, Biophysical Journal 2018,
-k_on =   49.045; % Campbell et al, Biophysical Journal 2018
-k_off = 184.464; % manually tuned parameter!
-
-% transitions between super relaxed state and non relaxed state
-k1sr = adjvar(5)*  63.75;
-kforce = adjvar(6)*3.5092/7.5;  %dived by kPa to mmHg conversion rate
-k2sr =   226.54; % made-up number
-
 
 % Metabolite levels (use the values from Tewari's paper) (9/5 BM)
 MgATP_LV  = input(7); % cytosolic Mg-ATP concentration, mM
@@ -81,18 +62,17 @@ Amref_RV = input(22);
 
 K_Pi = 4.00; K_T = 0.4897; K_D = 0.194;% Used the values from Tewari etal JMCC (9/5 BM)
 
-%% Cross bridge rate constants Q10s values have been use for Temprature effect (9/5 BM)
-ka      = 536.86; % myosin-actin attach rate constant, 1/sec
-kd      = 905.1;% myosin-actin detach rate constant, 1/sec
-k1      = 44.778; % transition A1 to A2 rate constant, 1/sec
-km1     = 21.296; % transition A2 to A1 rate constant, 1/sec
-k2      = 811.72; % transition A2 to A3 rate constant, 1/sec
-km2     = 43.25;% transition A3 to A2 rate constant, 1/sec
-k3      = 142.23; % transition A3 to P rate constant, 1/sec
-alpha1  = 10.0; % Stretch sensing parameter for k1 and k?1, 1/um
-alpha2  = 9.1; % Stretch sensing parameter for k2 and k?2, 1/um
-alpha3  =  0.1*59.3; % Stretch sensing parameter for k3, 1/um
-s3      = 9.9e-3;  % Strain at which k3 is minimum, um
+%%Cross bridge rate constants Q10s values have been use for Temprature effect (9/5 BM)
+
+%% para Best 
+% K_coop =     6.0; % Campbell et al, Biophysical Journal 2018,
+% k_on =  50; % Campbell et al, Biophysical Journal 2018
+% k_off = 0.9*200; % manually tuned parameter!
+% 
+% % transitions between super relaxed state and non relaxed state
+% k1sr = adjvar(5)* 1.54*15;
+% kforce = adjvar(6)* 1.140*0.15;  %dived by kPa to mmHg conversion rate
+% k2sr = 150; % made-up number
 % 
 % ka      = 681.1559*1.1; % myosin-actin attach rate constant, 1/sec
 % kd      = 2.0909e+03;% myosin-actin detach rate constant, 1/sec
@@ -107,14 +87,94 @@ s3      = 9.9e-3;  % Strain at which k3 is minimum, um
 % alpha3  = 0.6*59.3; % Stretch sensing parameter for k3, 1/um
 % s3      = 9.9e-3;  % Strain at which k3 is minimum, um
 % 
+% kstiff1 = 20000; % kPa/um (9/5 BM)
+% kstiff2 = 375000; % kPa/um (9/5 BM)
+% k_passive = 40; % mN / mm^2 / micron
 
-kstiff1 = 20000; % kPa/um (9/5 BM)
-kstiff2 = 1.05*375000; % kPa/um (9/5 BM)
-k_passive = 40; % mN / mm^2 / micron
+%% para 1
+% ka      = 536.86; % myosin-actin attach rate constant, 1/sec
+% kd      = 905.1;% myosin-actin detach rate constant, 1/sec
+% k1      = 44.778; % transition A1 to A2 rate constant, 1/sec
+% km1     = 21.296; % transition A2 to A1 rate constant, 1/sec
+% k2      = 811.72; % transition A2 to A3 rate constant, 1/sec
+% km2     = 43.25;% transition A3 to A2 rate constant, 1/sec
+% k3      = 142.23; % transition A3 to P rate constant, 1/sec
+% alpha1  = 10.0; % Stretch sensing parameter for k1 and k?1, 1/um
+% alpha2  = 9.1; % Stretch sensing parameter for k2 and k?2, 1/um
+% alpha3  =  0.1*59.3; % Stretch sensing parameter for k3, 1/um
+% s3      = 9.9e-3;  % Strain at which k3 is minimum, um
+% 
+% K_coop =     11.659; % Campbell et al, Biophysical Journal 2018,
+% k_on =   49.045; % Campbell et al, Biophysical Journal 2018
+% k_off = 184.464; % manually tuned parameter!
+% 
+% % transitions between super relaxed state and non relaxed state
+% k1sr = adjvar(5)*  63.75;
+% kforce = adjvar(6)*3.5092/7.5;  %dived by kPa to mmHg conversion rate
+% k2sr =   226.54; % made-up number
+% 
+% kstiff1 = 20000; % kPa/um (9/5 BM)
+% kstiff2 = 1.05*375000; % kPa/um (9/5 BM)
+% k_passive = 40; % mN / mm^2 / micron
 
-% kstiff1 = 2*3.3095e+03 *7.5; % kPa/um (9/5 BM)
-% kstiff2 = 2*6.2053e+04*7.5; % kPa/um (9/5 BM)
-%  k_passive =40; % mN / mm^2 / micron
+% % kstiff1 = 2*3.3095e+03 *7.5; % kPa/um (9/5 BM)
+% % kstiff2 = 2*6.2053e+04*7.5; % kPa/um (9/5 BM)
+% %  k_passive =40; % mN / mm^2 / micron
+%% para 2
+% 
+% ka      = 587.8418; % myosin-actin attach rate constant, 1/sec
+% kd      = 1.0235e3;% myosin-actin detach rate constant, 1/sec
+% k1      = 144.0581; % transition A1 to A2 rate constant, 1/sec
+% km1     = 21.296; % transition A2 to A1 rate constant, 1/sec
+% k2      = 811.72; % transition A2 to A3 rate constant, 1/sec
+% km2     = 43.25;% transition A3 to A2 rate constant, 1/sec
+% k3      = 97.5172; % transition A3 to P rate constant, 1/sec
+% alpha1  = 10.0; % Stretch sensing parameter for k1 and k?1, 1/um
+% alpha2  = 9.1; % Stretch sensing parameter for k2 and k?2, 1/um
+% alpha3  =  0.1*59.3; % Stretch sensing parameter for k3, 1/um
+% s3      = 9.9e-3;  % Strain at which k3 is minimum, um
+% 
+% K_coop =     10.4178; % Campbell et al, Biophysical Journal 2018,
+% k_on =   166.5150; % Campbell et al, Biophysical Journal 2018
+% k_off = 950.778; % manually tuned parameter!
+% 
+% % transitions between super relaxed state and non relaxed state
+% k1sr = adjvar(5)*  8.27;
+% kforce = adjvar(6)*7.3973/7.5;  %dived by kPa to mmHg conversion rate
+% k2sr =   57.25; % made-up number
+% 
+% kstiff1 = 1501.3*7.5; % kPa/um (9/5 BM)
+% kstiff2 = 1.16*28150*7.5; % kPa/um (9/5 BM)
+% k_passive = 40*1; % mN / mm^2 / micron % mean SHAM
+% % k_passive = 40*3; % mN / mm^2 / micron % for TAC rat 1
+
+%% para 4
+
+ka      = 559.5568; % myosin-actin attach rate constant, 1/sec
+kd      =  304.6708;% myosin-actin detach rate constant, 1/sec
+k1      = 112.3727; % transition A1 to A2 rate constant, 1/sec
+km1     = 21.296; % transition A2 to A1 rate constant, 1/sec
+k2      = 811.72; % transition A2 to A3 rate constant, 1/sec
+km2     = 43.25;% transition A3 to A2 rate constant, 1/sec
+k3      = 144.5586; % transition A3 to P rate constant, 1/sec
+alpha1  = 10.0; % Stretch sensing parameter for k1 and k?1, 1/um
+alpha2  = 9.1; % Stretch sensing parameter for k2 and k?2, 1/um
+alpha3  =  0.1*59.3; % Stretch sensing parameter for k3, 1/um
+s3      = 9.9e-3;  % Strain at which k3 is minimum, um
+
+K_coop =      9.6846; % Campbell et al, Biophysical Journal 2018,
+k_on =   101.1850; % Campbell et al, Biophysical Journal 2018
+k_off = 723.8520; % manually tuned parameter!
+
+% transitions between super relaxed state and non relaxed state
+k1sr = adjvar(5)*  174.7353;
+kforce = adjvar(6)*1.1688/7.5;  %dived by kPa to mmHg conversion rate
+k2sr =    750.4800; % made-up number
+
+kstiff1 = 2.4291e+03*7.5; % kPa/um (9/5 BM)
+kstiff2 = 1.16*45545*7.5; % kPa/um (9/5 BM)
+k_passive = 40*2; % mN / mm^2 / micron % for mean SHAM rat
+% k_passive = 40*3; % mN / mm^2 / micron % for TAC rat 1
 
 % correcting rate constants for metabolite levels in LV, SEP, and RV
 kd_LV  = kd*(Pi_LV/K_Pi)/(1.0 + Pi_LV/K_Pi);
@@ -355,7 +415,8 @@ U_SR_LV = 1 - U_NR_LV;
 Jon = k_on*Ca_i*N_LV*(1 + K_coop*(1 - N_LV));
 Joff = k_off*P0_LV*(1 + K_coop*N_LV);
 dXdT(19) = - Jon + Joff; % dN_LV / dt
-dXdT(20) = k1sr*(1 + kforce*(sigmapas_LV + sigmaact_LV))*U_SR_LV - k2sr*U_NR_LV ; % DAB 10/8
+% dXdT(20) = k1sr*(1 + kforce*(sigmapas_LV + sigmaact_LV))*U_SR_LV - k2sr*U_NR_LV ; % DAB 10/8
+dXdT(20) = k1sr * (1 + kforce * sigmaact_LV) * U_SR_LV - k2sr*U_NR_LV ; % DAB 10/8
 
 %% Myofiber Mechanics: SL_SEP
 
@@ -396,7 +457,8 @@ U_SR_SEP = 1 - U_NR_SEP;
 Jon = k_on*Ca_i*N_SEP*(1 + K_coop*(1 - N_SEP));
 Joff = k_off*P0_SEP*(1 + K_coop*N_SEP);
 dXdT(30) = - Jon + Joff; 
-dXdT(31) = k1sr*(1 + kforce*(sigmapas_SEP + sigmaact_SEP))*U_SR_SEP - k2sr*U_NR_SEP ; % DAB 10/8
+% dXdT(31) = k1sr*(1 + kforce*(sigmapas_SEP + sigmaact_SEP))*U_SR_SEP - k2sr*U_NR_SEP ; % DAB 10/8
+dXdT(31) = k1sr*(1 + kforce * sigmaact_SEP) * U_SR_SEP - k2sr*U_NR_SEP ; % DAB 10/8
 
 %% Myofiber Mechanics: SL_RV
 
@@ -434,7 +496,8 @@ U_SR_RV = 1.0 - U_NR_RV;
 Jon = k_on*Ca_i*N_RV*(1 + K_coop*(1 - N_RV));
 Joff = k_off*P0_RV*(1 + K_coop*N_RV);
 dXdT(41) = - Jon + Joff; 
-dXdT(42) = k1sr*(1 + kforce*(sigmapas_RV + sigmaact_RV))*U_SR_RV - k2sr*U_NR_RV ; % DAB 10/8
+% dXdT(42) = k1sr*(1 + kforce*(sigmapas_RV + sigmaact_RV))*U_SR_RV - k2sr*U_NR_RV ; % DAB 10/8
+dXdT(42) = k1sr*(1 + kforce * sigmaact_RV) * U_SR_RV - k2sr * U_NR_RV ; % DAB 10/8
 
 % Myofiber Mechanics
 dXdT(5) = dSL_LV;%(Kse*(SLo_LV - SL_LV) - sigmapas_LV - sigmaact_LV)/eta;

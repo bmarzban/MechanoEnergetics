@@ -66,24 +66,16 @@ CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as me
 
 %         and   x_ATPase ==> ATP hydrolsis rate for LV, Septal, and RV independantly  
 
-
-% % Rat 9  % eta = 0.5(9 is mean SHAM rat)
+% adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
+% 
+% % Rat 10  % eta = 0.1(10 is TAC rat #1)
 % adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
 
-% adjvar = [0.99 1 0.99 1.06 1 1 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
-% 
-% tune_ATPase_LV =  1.3224* (1/ 0.6801) *1.0e-3;
-% tune_ATPase_SEP = tune_ATPase_LV;
-% tune_ATPase_RV =  tune_ATPase_LV;
-% 
+%% para set 4
 
-% % Rat 10  % eta = 0.5(10 is TAC rat #1)
-% adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
+adjvar = [1.3 0.92 2.03 0.75 1.3*2.3 1.3*2.3 2.24]; % Rat 10  % eta = 0.1(19 is mean TAC rat)
 
-% adjvar = [1*1.1 1*(44/47) 1*1.6 0.45 2.4/1.54 1.2 1.5*1.02]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
-adjvar = [1.042*1.4 1.1*0.72 1.1*2.2 0.44 1.4 1/2 2.22]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
-
-tune_ATPase_LV = 0.5529* (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV = 0.8587* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
 
@@ -125,7 +117,7 @@ Pi_RV = Pi_LV ;
 
 %% Run cardiovascular mechanics model
 Lsref = 1.9;
-k3      = 142.23; % transition A3 to P rate constant, 1/sec
+k3      = 144.5586; % transition A3 to P rate constant, 1/sec
 K_T = 0.4897; 
 K_D = 0.194;% Used the values from Tewari etal JMCC (9/5 BM)
 alpha3  = 0.1*59.3; % Stretch sensing parameter for k3, 1/um
@@ -161,8 +153,8 @@ SL_RV  = 2.2;
 
 % V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
 % V_RV  = edLV_target/1000;%
-V_LV  = 0.900;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-V_RV  = 0.600;%
+V_LV  = 0.700;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+V_RV  = 0.900;%
 % 
 V_SA = adjvar(4)*3.0;
 V_SV = adjvar(4)*4.80;
@@ -243,11 +235,11 @@ M(3,3) = 0;
 M(4,4) = 0; 
 input = [CO_target stim_period Vw_LV Vw_SEP Vw_RV R_TAC MgATP_LV MgADP_LV Pi_LV MgATP_SEP MgADP_SEP Pi_SEP MgATP_RV MgADP_RV Pi_RV A_HR B_HR C_HR Ca0_HR Amref_LV Amref_SEP Amref_RV];
 options = odeset('Mass',M,'RelTol',1e-6,'AbsTol',1e-6,'MaxStep',stim_period/50);
-[t,Y] = ode15s(@dXdT_cardiovascular_mechanics,[0 200*stim_period],init,options,adjvar,input);
+[t,Y] = ode15s(@dXdT_cardiovascular_mechanics,[0 60*stim_period],init,options,adjvar,input);
 init = Y(end,:);
 save init init
 [t,Y] = ode15s(@dXdT_cardiovascular_mechanics,[0 1*stim_period],init,options,adjvar,input);
-
+% 
 % % Assignig the solution of the ODE's to the variables
 
 xm_LV  = Y(:,1); % LV heart geometry variable, cm
@@ -367,7 +359,6 @@ P_Ao = P_Ao_open.*(P_LV>P_Ao_open) + ...
 QOUT_LV = QOUT_LV.*(P_LV>P_Ao_open);
 
 CO_sim =  (max(V_LV)-min(V_LV))*HR;
-
    
 SV_LV_sim = max(1e3*V_LV) - min(1e3*V_LV);
 EF_LV_sim = SV_LV_sim/max(1e3*V_LV) * 100;
@@ -402,8 +393,8 @@ r_RV  = interp1(t,k3_RV*f_alpha3o_RV,ti);
 rate_of_XB_turnover_ave = (Vw_LV*mean(r_LV) + Vw_SEP*mean(r_SEP))/(Vw_LV + Vw_SEP) 
 
 % unit convert to oxygen consumption
-ATP_ase_mechannics_Averge_LV_SEP = (1.3203/3.8868)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-ATP_ase_mechannics_RV = (1.3203/3.8868)*mean(r_RV)
+ATP_ase_mechannics_Averge_LV_SEP = (1.3203/5.951)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
+ATP_ase_mechannics_RV = (1.3203/5.951)*mean(r_RV)
 
 % NA = 6.023e23; % Avogadro's number; per mol
 % nXB = 1e14*0.36e3; % No. of XBs per g muscle; Barclay etal Prog Biophys Mol Biol. 2010 Jan;102(1):53-71
