@@ -167,14 +167,13 @@ k_on =   101.1850; % Campbell et al, Biophysical Journal 2018
 k_off = 723.8520; % manually tuned parameter!
 
 % transitions between super relaxed state and non relaxed state
-k1sr = adjvar(5)*  174.7353;
-kforce = adjvar(6)*1.1688/7.5;  %dived by kPa to mmHg conversion rate
-k2sr =    750.4800; % made-up number
+k1sr = adjvar(5)*  15.1437;
+kforce = adjvar(6)*1.5191/7.5;  %dived by kPa to mmHg conversion rate
+k2sr =    50.032; % made-up number
 
-kstiff1 = 2.4291e+03*7.5; % kPa/um (9/5 BM)
-kstiff2 = 1.16*45545*7.5; % kPa/um (9/5 BM)
-k_passive = 40*2; % mN / mm^2 / micron % for mean SHAM rat
-% k_passive = 40*3; % mN / mm^2 / micron % for TAC rat 1
+kstiff1 = 2.4291e+03 * 7.5; % kPa/um (9/5 BM)
+kstiff2 = 1.098 * 45545 * 7.5; % kPa/um (9/5 BM)
+k_passive = adjvar(4)*39.4; % mN / mm^2 / micron % for mean SHAM rat and TAC rat 1
 
 % correcting rate constants for metabolite levels in LV, SEP, and RV
 kd_LV  = kd*(Pi_LV/K_Pi)/(1.0 + Pi_LV/K_Pi);
