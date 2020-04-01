@@ -70,11 +70,12 @@ CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as me
 
 %% para set 4
 
-adjvar = [1.15 0.7505 1.2152 2.0812*0.26 1.3692*3 1.3692*3 4.90 1.7]; % Rat 17  % eta = 0.1(19 is mean TAC rat)
+% adjvar = [1.15 0.7505 1.2152 2.0812*0.26 1.3692*3 1.3692*3 4.90 1.7]; % Rat 17  % eta = 0.1(19 is mean TAC rat)
+adjvar = [1.33 1.05 1.3 1.09*2.25 1.51 1.51 1.15 0.623]; % Rat 17 %1.31 kstiff  % eta = 0.1(19 is mean TAC rat)
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV = 0.977* (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV = 1.465* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
 
@@ -86,10 +87,10 @@ Vw_LV = (LVW*2/3)/1000/1.05;
 Vw_SEP =(LVW/3)/1000/1.05;
 Vw_RV = RVW/1000/1.05;
 
-% V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-% V_RV  = edLV_target/1000;%
-V_LV  = 0.600;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-V_RV  = 0.600;%
+V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+V_RV  = edLV_target/1000;%
+% V_LV  = 0.600;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+% V_RV  = 0.600;%
 % % 
 V_SA = 3.0;
 V_SV = 4.80;
@@ -396,7 +397,8 @@ r_RV  = interp1(t,k3_RV*f_alpha3o_RV,ti);
 rate_of_XB_turnover_ave = (Vw_LV*mean(r_LV) + Vw_SEP*mean(r_SEP))/(Vw_LV + Vw_SEP) 
 
 % unit convert to oxygen consumption
-ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
+% ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
+ATP_ase_mechannics_Averge_LV_SEP = (1.319/5.1267)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
 
 Fitting_error(4) = (edLV_target - max(1e3*V_LV))^2 / (edLV_target * max(1e3*V_LV));
 Fitting_error(5) = ((esLV_target - min(1e3*V_LV))^2 / (esLV_target * min(1e3*V_LV)));
