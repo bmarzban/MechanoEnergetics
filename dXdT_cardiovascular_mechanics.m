@@ -172,7 +172,9 @@ kforce = adjvar(6)*1.5191/7.5;  %dived by kPa to mmHg conversion rate
 k2sr =    50.032; % made-up number
 
 kstiff1 = 2.4291e+03 * 7.5; % kPa/um (9/5 BM)
-kstiff2 = 1.098 * 45545 * 7.5; % kPa/um (9/5 BM)
+%  kstiff2 = 1.098 * 45545 * 7.5; % kPa/um (9/5 BM)
+kstiff2 = 1.31 * 45545 * 7.5; % kPa/um (9/5 BM)
+
 k_passive = adjvar(4)*39.4; % mN / mm^2 / micron % for mean SHAM rat and TAC rat 1
 
 % correcting rate constants for metabolite levels in LV, SEP, and RV

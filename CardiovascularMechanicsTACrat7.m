@@ -1,8 +1,8 @@
 % This code is the main driver for the cardiovascular mechanics model 
-% clear; 
+clear; 
 tic;
 %% chooosing the rat number (Mean Sham rat is Rat number 9,Mean TAC rat is number 19 )
-rat_number = 9
+rat_number = 16
 
 if rat_number<=9
     shamRat = 1;
@@ -36,14 +36,15 @@ end
 % Average sham
 TAN_sham = data(9,16)/1000; % mole/L cell
 CRtot_sham = data(9,18)/1000; % mole/L cell
+% TEP_sham =1.6* data(9,20)/1000; % mole/L cell
 
-Ao = 10.260e-3; % (M per liter cell)
-Co = 43.007e-3; % (M per liter cell)
-Po = 35.446e-3; % (M per liter cell)
-% Default settings for meant SHAM)
+A0 = 8.62; %mmol/ (L Cell)
+P0 = 29.78;%mmol/ (L Cell)
+a = 0.082; %mmol/ (L Cell. year)
+p = 0.283; %mmol/ (L Cell. year)
 
-TEP = Po - (0.283e-3)*(Ao-TAN)/(0.082e-3); % (M per liter cell)
-TEP_sham = Po - (0.283e-3)*(Ao-TAN_sham)/(0.082e-3); % (M per liter cell)
+TEP = (P0 - p*((A0 - TAN*1000) /a))/1000; % mole/L cell
+TEP_sham = (P0 - p*((A0 - TAN_sham*1000) /a))/1000; %mole/L cell
 
 if shamRat == 0
     preV = data(rat_number , 11); % mm/s
@@ -58,28 +59,22 @@ else
     R_TAC = 0;
 end
 
-
+CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as mean sham , we had that the CO changed since we wanted to have the 
+% right R_TAC
 %% Adjustable variables
 %(Tune the following variables to fit the EDLV, ESLV, EDRV, ESLV, CO, ATP consumption Rate predicted by Ox-Phos and Mechanic model)
 
 %         and   x_ATPase ==> ATP hydrolsis rate for LV, Septal, and RV independantly  
 
-
-% % Rat 9  % eta = 0.5(9 is mean SHAM rat)
-% adjvar = [Reference area LV & Septal,  Reference area RV,  kpassive, ksr, kforce, R_SA, R_TAC]
-% adjvar = [1.02 1.0 0.94 0.72 1.26 1/2 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
-
-% adjvar = [1 1 1 0.77 1.22 1.18 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
-%% para set 2
-% adjvar = [1.005 1 1.02 0.938 1.06 1. 1.0]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
+% adjvar = [Reference area LV & Septal,  Reference area RV,  k_passive, ksr, kforce, R_SA, R_TAC]
 
 %% para set 4
-% adjvar = [1.0 1 1.0 1.0 1.05 1.05 1.0 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
-adjvar = [1.0 1 1.0 1.09 0.83 0.83 1.0 1]; % Rat 9 %1.31 kstiff  % eta = 0.1(19 is mean TAC rat)
+
+adjvar = [1.15 0.7505 1.2152 2.0812*0.26 1.3692*3 1.3692*3 4.90 1.7]; % Rat 16  % eta = 0.1(19 is mean TAC rat)
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV =  1.319* (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV = 0.977* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
 
@@ -87,45 +82,60 @@ Amref_LV  = adjvar(1) * 2.077 ; % LV midwall reference surface area, cm^2
 Amref_SEP = adjvar(2) * Amref_LV * 0.590 ; % SEP midwall reference surface area, cm^2
 Amref_RV  = adjvar(3) * 3.3 ; % RV midwall reference surface area, cm^2
 
-% Assign initial condtion for LV and RV
-
-% V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-% V_RV  = edLV_target/1000;%
-V_LV  = 0.5;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-V_RV  = 0.5;%
-
 Vw_LV = (LVW*2/3)/1000/1.05;
 Vw_SEP =(LVW/3)/1000/1.05;
 Vw_RV = RVW/1000/1.05;
 
-%% Run the energetics model to get the metabolite concentrations
-
-    energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
-    energtics_output_SEP = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_SEP);
-    energtics_output_RV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_RV);
-    
-    
-    MgATP_LV = energtics_output_LV(1);
-    MgADP_LV = energtics_output_LV(2);
-    Pi_LV = energtics_output_LV(10)*1000;
-
-    MgATP_SEP = energtics_output_SEP(1);
-    MgADP_SEP = energtics_output_SEP(2);
-    Pi_SEP = energtics_output_SEP(10)*1000;
-    
-    MgATP_RV = energtics_output_RV(1);
-    MgADP_RV = energtics_output_RV(2);
-    Pi_RV = energtics_output_RV(10)*1000;
+% V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+% V_RV  = edLV_target/1000;%
+V_LV  = 0.600;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+V_RV  = 0.600;%
+% % 
+V_SA = 3.0;
+V_SV = 4.80;
+V_PA = 0.5;
+V_PV = 1.0; 
+V_Ao = 1.0;
 
 
-%% Run cardiovascular mechanics model
+%% parameters for calculating ATPase rate
 Lsref = 1.9;
 k3      = 144.5586; % transition A3 to P rate constant, 1/sec
 K_T = 0.4897; 
 K_D = 0.194;% Used the values from Tewari etal JMCC (9/5 BM)
-alpha3  =      0.1*59.3; % Stretch sensing parameter for k3, 1/um
+alpha3  = 0.1*59.3; % Stretch sensing parameter for k3, 1/um
 s3      = 9.9e-3;  % Strain at which k3 is minimum, um
 
+
+%% Run the energetics model to get the metabolite concentrations
+
+    energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
+%     energtics_output_SEP = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_SEP);
+%     energtics_output_RV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_RV);
+%     
+%     
+    MgATP_LV = energtics_output_LV(1);
+    MgADP_LV = energtics_output_LV(2);
+    Pi_LV = energtics_output_LV(10)*1000;
+
+%     MgATP_SEP = energtics_output_SEP(1);
+%     MgADP_SEP = energtics_output_SEP(2);
+%     Pi_SEP = energtics_output_SEP(10)*1000;
+%     
+%     MgATP_RV = energtics_output_RV(1);
+%     MgADP_RV = energtics_output_RV(2);
+%     Pi_RV = energtics_output_RV(10)*1000;
+% 
+%    
+
+MgATP_SEP = MgATP_LV;
+MgADP_SEP = MgADP_LV;
+Pi_SEP = Pi_LV ;
+MgATP_RV = MgATP_LV;
+MgADP_RV = MgADP_LV;
+Pi_RV = Pi_LV ;
+
+%% Run cardiovascular mechanics model
 
 %% Extract Ca coeficient based on the Ca data for diferent simulation 
 para_fitted_Ca = [2	3	4	5	6	7	8	9	10;
@@ -143,6 +153,7 @@ C_HR = ppval(C_HR_pchip,HR/60);
 Ca0_HR_pchip = pchip(freq_all,para_fitted_Ca(5,:));
 Ca0_HR = ppval(Ca0_HR_pchip,HR/60);
 
+
 stim_period = 1/(HR/60);
 
 xm_LV   = -0.60;
@@ -153,13 +164,6 @@ ym    = 0.50;
 SL_LV  = 2.2;
 SL_SEP = 2.2;
 SL_RV  = 2.2;
-
-
-V_SA = 3.0;
-V_SV = 4.80;
-V_PA = 0.5;
-V_PV = 1.0; 
-V_Ao = 1.0;
 
 
 P1_0_LV = 0; % 0th moment state A1, LV
@@ -202,10 +206,11 @@ init = [xm_LV ,xm_SEP ,xm_RV ,ym , SL_LV, SL_SEP, SL_RV, V_LV, V_RV, ...
        P1_0_RV, P1_1_RV, P1_2_RV, P2_0_RV, P2_1_RV, P2_2_RV, P3_0_RV, P3_1_RV, P3_2_RV, N_RV, U_NR_RV,...
        V_SV, V_PV ,V_SA ,V_PA, V_Ao]';
 
-opts = optimset('Display','iter','MaxFunEvals',100000,'MaxIter',10000);
+opts = optimset('MaxFunEvals',10000,'MaxIter',1000);
 TrisegEquations(init(1:4),Vw_LV,Vw_SEP,Vw_RV,SL_LV,SL_SEP,SL_RV,V_LV,V_RV,Amref_LV,Amref_SEP,Amref_RV);
 x = fsolve(@TrisegEquations,init(1:4),opts,Vw_LV,Vw_SEP,Vw_RV,SL_LV,SL_SEP,SL_RV,V_LV,V_RV,Amref_LV,Amref_SEP,Amref_RV);
 init(1:4) = x;
+
 % Lumped circulatory parameters
 C_Ao = 0.0022045;  % Proximal aortic compliance, mL/mmHg
 C_SA = 0.0077157; % Systemic arterial compliance, mL/mmHg
@@ -213,7 +218,7 @@ C_SV = 2.5; % Systemic venous compliance, mL/mmHg  DAB 10/7/2018
 C_PV = 0.25; % Pulmonary venous compliance, mL/mmHg
 C_PA = 0.013778; % Pulmonary arterial compliance, mL/mmHg
 R_Ao   = 2.5; % resistance of aorta , mmHg*sec/mL
-R_SA   = 88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
+R_SA   =  adjvar(7)*88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
 % R_SA   = 2.25*88/CO_target*60;% mmHg*sec/mL; %  TAC #1
 R_PA   = 12/CO_target*60; % Pulmonary vasculature resistance, mmHg*sec/mL % Match the old code(9/5 BM) DAB change 9/15
 R_SV   = 0.25; 
@@ -224,6 +229,8 @@ R_tAo  = 0.5;
 R_tSA  = 4;
 Kse    = 50000; % series element elastance, mmHg/micron (Changed to match the value in Tewari's code) (9/5 BM)
 
+% load init
+
 M = speye(47);
 M(1,1) = 0;
 M(2,2) = 0;
@@ -231,25 +238,11 @@ M(3,3) = 0;
 M(4,4) = 0; 
 input = [CO_target stim_period Vw_LV Vw_SEP Vw_RV R_TAC MgATP_LV MgADP_LV Pi_LV MgATP_SEP MgADP_SEP Pi_SEP MgATP_RV MgADP_RV Pi_RV A_HR B_HR C_HR Ca0_HR Amref_LV Amref_SEP Amref_RV];
 options = odeset('Mass',M,'RelTol',1e-6,'AbsTol',1e-6,'MaxStep',stim_period/50);
-[ts,ys] = ode15s(@dXdT_cardiovascular_mechanics,[0 120*stim_period],init,options,adjvar,input);
-% V_LV   = ys(:,8); % volume LV, mL
-% V_RV   = ys(:,9); % volume RV, mL
-% V_SV   = ys(:,43); % volume of systemic veins
-% V_PV   = ys(:,44); % volume of pulmonary veins
-% V_SA   = ys(:,45); % volume of systemic arterys
-% V_PA   = ys(:,46); % volume of pulmonary arterys
-% V_Ao   = ys(:,47); % volume of proximal aorta
-% V_T = V_LV + V_RV + V_SV + V_PV + V_SA + V_PA + V_Ao;
-% 
-% P_PV = V_PV/C_PV;
-% P_PA = V_PA/C_PA;
-% 
-%  figure(1); plot(ts,V_LV,ts,ys(:,11)); title('ventricular volumes')
-% % figure(2); plot(ts,(V_PV + V_PA)./V_T);
-% figure(3); plot(ts,P_PA,ts,P_PV); title('pulmonary pressures');
-init = ys(end,:);
+[t,Y] = ode15s(@dXdT_cardiovascular_mechanics,[0 60*stim_period],init,options,adjvar,input);
+init = Y(end,:);
+save init init
 [t,Y] = ode15s(@dXdT_cardiovascular_mechanics,[0 1*stim_period],init,options,adjvar,input);
-
+% 
 % % Assignig the solution of the ODE's to the variables
 
 xm_LV  = Y(:,1); % LV heart geometry variable, cm
@@ -369,14 +362,11 @@ P_Ao = P_Ao_open.*(P_LV>P_Ao_open) + ...
 QOUT_LV = QOUT_LV.*(P_LV>P_Ao_open);
 
 CO_sim =  (max(V_LV)-min(V_LV))*HR;
-
-CO_mean = mean(QOUT_LV)
-
+   
 SV_LV_sim = max(1e3*V_LV) - min(1e3*V_LV);
 EF_LV_sim = SV_LV_sim/max(1e3*V_LV) * 100;
 SV_RV_sim = max(1e3*V_RV) - min(1e3*V_RV);
 EF_RV_sim = SV_RV_sim/max(1e3*V_RV) * 100;
-    
 %% calculate the error
 edLV_sim =  max(1e3*V_LV);
 esLV_sim =  min(1e3*V_LV);
@@ -402,17 +392,11 @@ r_SEP = interp1(t,k3_SEP*f_alpha3o_SEP,ti);
 r_RV  = interp1(t,k3_RV*f_alpha3o_RV,ti);
 
 % LV X-bridge turnover rate
-Vw_LV_W = (2/3)*LVW/1000;
-Vw_SEP_W= (1/3)*LVW/1000;
-rate_of_XB_turnover_ave = (Vw_LV_W*mean(r_LV) + Vw_SEP_W*mean(r_SEP))/(Vw_LV_W + Vw_SEP_W) 
+
+rate_of_XB_turnover_ave = (Vw_LV*mean(r_LV) + Vw_SEP*mean(r_SEP))/(Vw_LV + Vw_SEP) 
 
 % unit convert to oxygen consumption
-% ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-ATP_ase_mechannics_Averge_LV_SEP = (1.319/5.1267)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-
-% NA = 6.023e23; % Avogadro's number; per mol
-% nXB = 1e14*0.36e3; % No. of XBs per g muscle; Barclay etal Prog Biophys Mol Biol. 2010 Jan;102(1):53-71
-% J_ATPase_tissue_LV = J_ATP_LV*nXB/NA;% mole/sec/g tissue
+ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave; % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
 
 Fitting_error(4) = (edLV_target - max(1e3*V_LV))^2 / (edLV_target * max(1e3*V_LV));
 Fitting_error(5) = ((esLV_target - min(1e3*V_LV))^2 / (esLV_target * min(1e3*V_LV)));
@@ -422,7 +406,6 @@ Fitting_error(8) = ((SV_LV_target - SV_LV_sim)^2 / (SV_LV_target * SV_LV_sim));
 toc
 
 [MAP max(V_LV) min(V_LV) P_LV(end)]
-
 %% Plotting
 h1 = figure(1);
 subplot(2,3,1); plot(t,V_LV,t,V_RV); title('ventricular volumes')
@@ -438,7 +421,10 @@ subplot(2,3,3); plot(t,Y(:,5:7)); title('SL'); legend('LV','SEP','RV'); % SL's
 ylabel('$SL$ (um)','interpreter','latex','fontsize',18)
 xlabel('$t$ (sec)','interpreter','latex','fontsize',18)
 
-subplot(2,3,4); plot(t,P_LV,t,P_Ao,t,P_SA,t,P_PV); legend('P_{LV}','P_{Ao}','P_{SA}','P_{PV}'); %set(gca,'Ylim',[0 125]);
+
+subplot(2,3,4); plot(t,P_LV,t,P_Ao,t,P_SA,t,P_PV);
+hold on; plot([0 1/(HR/60)],[max(P_Ao) max(P_Ao)],'k--',[0 1/(HR/60)],[max(P_Ao)+4*delta_p max(P_Ao)+4*delta_p],'k--'); hold off
+legend('P_{LV}','P_{Ao}','P_{SA}','P_{PV}','Max P_{Ao}','Max P_{LV}'); %set(gca,'Ylim',[0 125]);
 ylabel('$P$ (mmHg)','interpreter','latex','fontsize',18)
 xlabel('$t$ (sec)','interpreter','latex','fontsize',18)
 
@@ -448,7 +434,7 @@ xlabel('$V$ (ml)','interpreter','latex','fontsize',18)
 
 txt_EF = ['EF =', num2str(EF_LV_sim)]
 subplot(2,3,6);cla; text(0.2,0.8,txt_EF)
-txt_SV = ['SV =', num2str(SV_LV_sim),' ml']
+txt_SV = ['SV =', num2str(SV_LV_sim),' ml'];
 text(0.2,0.9,txt_SV)
 title(['MAP = ', num2str(MAP),' mmHg']);
 set(h1,'Position',[50 50 1250 600])
@@ -456,8 +442,6 @@ set(h1,'Position',[50 50 1250 600])
 figure(2)
 plot(t,U_NR_LV,t,U_NR_SEP,t,U_NR_RV)
 title('U_NR (Non Relaxed)')
-
-
 % filename = strcat(pwd,'\results\rest\rat',num2str(rat_number));
 % save(filename)
 

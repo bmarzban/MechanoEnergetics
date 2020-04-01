@@ -1,3 +1,4 @@
+
 % This code is the main driver for the cardiovascular mechanics model 
 clear; 
 tic;
@@ -66,21 +67,15 @@ CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as me
 
 %         and   x_ATPase ==> ATP hydrolsis rate for LV, Septal, and RV independantly  
 
-% adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
-% 
-% % Rat 10  % eta = 0.1(10 is TAC rat #1)
-% adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
+% adjvar = [Reference area LV & Septal,  Reference area RV,  k_passive, ksr, kforce, R_SA, R_TAC]
 
 %% para set 4
+% adjvar = [1.187 1.02 0.88 2.0812*0.16 1.3692*4.9 1.3692*4.9 1.03 0.6]; % Rat 12  % eta = 0.1(19 is mean TAC rat)
+adjvar = [1.24 1.04 0.96 2.0812*0.7 1.3692*1.0 1.3692*1.0 1.01 0.55]; % Rat 12  1.31 kstiff1 % eta = 0.1(19 is mean TAC rat)
 
-% adjvar = [1.3 0.92 2.03 0.75 1.3*2.3 1.3*2.3 2.24]; % Rat 10  % eta = 0.1(19 is mean TAC rat)
-% adjvar = [1.29 0.9 2.4 1.18 1.3*1 1.3*1 1.84]; % Rat 11  % eta = 0.1(19 is mean TAC rat)
-% adjvar = [1.29 0.9 2.4 1.4 1.3*3 1.3*3 1.7]; % Rat 11  % eta = 0.1(19 is mean TAC rat)
-% adjvar = [1.29 0.9 2.3 1.47 1.3*5 1.3*5 1.4]; % Rat 11  % eta = 0.1(19 is mean TAC rat)
-%  adjvar = [1.296 0.92 2.25 1.4 1.3*20 1.3*20 1.31]; % Rat 11  % eta = 0.1(19 is mean TAC rat) kpassive = 3*40
-adjvar = [1.225 1 0.9 1.59 1.3*15 1.3*15 1.1]; % Rat 12  % eta = 0.1(19 is mean TAC rat)
+R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV = 1.387* (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV = 1.227* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
 
@@ -91,6 +86,25 @@ Amref_RV  = adjvar(3) * 3.3 ; % RV midwall reference surface area, cm^2
 Vw_LV = (LVW*2/3)/1000/1.05;
 Vw_SEP =(LVW/3)/1000/1.05;
 Vw_RV = RVW/1000/1.05;
+
+% V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+% V_RV  = edLV_target/1000;%
+V_LV  = 0.600;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+V_RV  = 0.600;%
+% 
+V_SA = 3.0;
+V_SV = 4.80;
+V_PA = 0.5;
+V_PV = 1.0; 
+V_Ao = 1.0;
+%% parameters for calculating ATPase rate
+Lsref = 1.9;
+k3      = 144.5586; % transition A3 to P rate constant, 1/sec
+K_T = 0.4897; 
+K_D = 0.194;% Used the values from Tewari etal JMCC (9/5 BM)
+alpha3  = 0.1*59.3; % Stretch sensing parameter for k3, 1/um
+s3      = 9.9e-3;  % Strain at which k3 is minimum, um
+
 
 %% Run the energetics model to get the metabolite concentrations
 
@@ -121,12 +135,6 @@ MgADP_RV = MgADP_LV;
 Pi_RV = Pi_LV ;
 
 %% Run cardiovascular mechanics model
-Lsref = 1.9;
-k3      = 144.5586; % transition A3 to P rate constant, 1/sec
-K_T = 0.4897; 
-K_D = 0.194;% Used the values from Tewari etal JMCC (9/5 BM)
-alpha3  = 0.1*59.3; % Stretch sensing parameter for k3, 1/um
-s3      = 9.9e-3;  % Strain at which k3 is minimum, um
 
 %% Extract Ca coeficient based on the Ca data for diferent simulation 
 para_fitted_Ca = [2	3	4	5	6	7	8	9	10;
@@ -155,17 +163,6 @@ ym    = 0.50;
 SL_LV  = 2.2;
 SL_SEP = 2.2;
 SL_RV  = 2.2;
-
-% V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-% V_RV  = edLV_target/1000;%
-V_LV  = 0.700;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-V_RV  = 0.900;%
-% 
-V_SA = adjvar(4)*3.0;
-V_SV = adjvar(4)*4.80;
-V_PA = adjvar(4)*0.5;
-V_PV = adjvar(4)*1.0; 
-V_Ao = adjvar(4)*1.0;
 
 
 P1_0_LV = 0; % 0th moment state A1, LV
@@ -398,12 +395,8 @@ r_RV  = interp1(t,k3_RV*f_alpha3o_RV,ti);
 rate_of_XB_turnover_ave = (Vw_LV*mean(r_LV) + Vw_SEP*mean(r_SEP))/(Vw_LV + Vw_SEP) 
 
 % unit convert to oxygen consumption
-ATP_ase_mechannics_Averge_LV_SEP = (1.3203/5.097)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-ATP_ase_mechannics_RV = (1.3203/5.097)*mean(r_RV)
-
-% NA = 6.023e23; % Avogadro's number; per mol
-% nXB = 1e14*0.36e3; % No. of XBs per g muscle; Barclay etal Prog Biophys Mol Biol. 2010 Jan;102(1):53-71
-% J_ATPase_tissue_LV = J_ATP_LV*nXB/NA;% mole/sec/g tissue
+% ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
+ATP_ase_mechannics_Averge_LV_SEP = (1.319/5.1267)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
 
 Fitting_error(4) = (edLV_target - max(1e3*V_LV))^2 / (edLV_target * max(1e3*V_LV));
 Fitting_error(5) = ((esLV_target - min(1e3*V_LV))^2 / (esLV_target * min(1e3*V_LV)));
@@ -429,7 +422,9 @@ ylabel('$SL$ (um)','interpreter','latex','fontsize',18)
 xlabel('$t$ (sec)','interpreter','latex','fontsize',18)
 
 
-subplot(2,3,4); plot(t,P_LV,t,P_Ao,t,P_SA,t,P_PV); legend('P_{LV}','P_{Ao}','P_{SA}','P_{PV}'); %set(gca,'Ylim',[0 125]);
+subplot(2,3,4); plot(t,P_LV,t,P_Ao,t,P_SA,t,P_PV);
+hold on; plot([0 1/(HR/60)],[max(P_Ao) max(P_Ao)],'k--',[0 1/(HR/60)],[max(P_Ao)+4*delta_p max(P_Ao)+4*delta_p],'k--'); hold off
+legend('P_{LV}','P_{Ao}','P_{SA}','P_{PV}','Max P_{Ao}','Max P_{LV}'); %set(gca,'Ylim',[0 125]);
 ylabel('$P$ (mmHg)','interpreter','latex','fontsize',18)
 xlabel('$t$ (sec)','interpreter','latex','fontsize',18)
 
