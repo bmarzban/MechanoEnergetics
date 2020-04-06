@@ -81,9 +81,9 @@ Amref_LV  = adjvar(1) * 2.077 ; % LV midwall reference surface area, cm^2
 Amref_SEP = adjvar(2) * Amref_LV * 0.590 ; % SEP midwall reference surface area, cm^2
 Amref_RV  = adjvar(3) * 3.3 ; % RV midwall reference surface area, cm^2
 
-Vw_LV = (LVW*2/3)/1000/1.05;
-Vw_SEP =(LVW/3)/1000/1.05;
-Vw_RV = RVW/1000/1.05;
+Vw_LV = (LVW*2/3)/1000/1.05
+Vw_SEP =(LVW/3)/1000/1.05
+Vw_RV = RVW/1000/1.05
 
 % V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
 % V_RV  = edLV_target/1000;%

@@ -76,11 +76,11 @@ CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as me
  
 % adjvar = [1 1.05 1.05 2.0812*0.55 1.3692*14.9 1.3692*14.9 1.3 0.68];% Rat 13   % eta = 0.1(19 is mean TAC rat)
 
-% % adjvar = [1.05 1.01 0.96 2.0812*0.6 1.3692*1.3 1.3692*1.3 1.1 0.55];% Rat 13  1.31 kstiff1 % eta = 0.1(19 is mean TAC rat)
-% % tune_ATPase_LV = 1.4207* (1/ 0.6801) *1.0e-3;
+adjvar = [1.05 1.01 0.96 2.0812*0.575 1.3692*1.44 1.3692*1.44 1.1 0.55];% Rat 13  1.31 kstiff1 % eta = 0.1(19 is mean TAC rat)
+tune_ATPase_LV = 1.432957* (1/ 0.6801) *1.0e-3;
 
-adjvar = [1.085 0.97 0.98 2.0812*0.45 1.3692*5 1.3692*5 1.09 0.56];% Rat 13  1.31 kstiff1 % eta = 0.1(19 is mean TAC rat)
-tune_ATPase_LV = 1.477* (1/ 0.6801) *1.0e-3;
+% % adjvar = [1.085 0.97 0.98 2.0812*0.45 1.3692*5 1.3692*5 1.09 0.56];% Rat 13  1.31 kstiff1 % eta = 0.1(19 is mean TAC rat)
+% % tune_ATPase_LV = 1.477* (1/ 0.6801) *1.0e-3;
 
 R_TAC = adjvar(8)*R_TAC;
 

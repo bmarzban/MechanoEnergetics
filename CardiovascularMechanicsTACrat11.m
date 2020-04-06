@@ -2,7 +2,7 @@
 clear; 
 tic;
 %% chooosing the rat number (Mean Sham rat is Rat number 9,Mean TAC rat is number 19 )
-rat_number = 11
+rat_number = 20
 
 if rat_number<=9
     shamRat = 1;
@@ -54,6 +54,9 @@ if shamRat == 0
     rho_blood = 1060; % kg/m^3
     delta_p = 0.5*(postV^2-preV^2)*rho_blood; % Pa
     delta_p = 0.0075*delta_p; % mmHg
+    if rat_number == 20
+        delta_p = 31.48;
+    end
     R_TAC = delta_p/CO_target*60;
 else 
     R_TAC = 0;
@@ -66,25 +69,18 @@ CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as me
 
 %         and   x_ATPase ==> ATP hydrolsis rate for LV, Septal, and RV independantly  
 
-% adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
-% 
-% % Rat 10  % eta = 0.1(10 is TAC rat #1)
-% adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
+% adjvar = [Reference area LV & Septal,  Reference area RV,  k_passive, ksr, kforce, R_SA, R_TAC]
 
 %% para set 4
-% adjvar = [1.2855 0.9205 1.5152 2.0812 1.3692*1 1.3692*1 1.320 0.49]; % Rat 11  % eta = 0.1(19 is mean TAC rat)
-% adjvar = [1.2855 0.9205 1.5152 2.0812*1.025 1.3692*0.73 1.3692*0.73 1.320 0.49]; % Rat 11 1.31 kstiff1  % eta = 0.1(19 is mean TAC rat)
-adjvar = [1.2855 0.9205 1.5152 1.52 1.3692*0.6 1.3692*0.6 1 0.49]; % Rat 11 Swap Metabolite 1.31 kstiff1  % eta = 0.1(19 is mean TAC rat)
+ 
+adjvar = [1.31 1 1.5152 2.0812*0.8 1.3692*0.83 1.3692*0.83 1.190 0.49]; % Rat 20 1.31 kstiff1  % eta = 0.1(19 is mean TAC rat)
+tune_ATPase_LV = 1.15* (1/ 0.6801) *1.0e-3;
+
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV = 1.328* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
-
-% Amref_LV  = adjvar(1) * 2.077 ; % LV midwall reference surface area, cm^2
-% Amref_SEP = adjvar(2) * Amref_LV * 0.590 ; % SEP midwall reference surface area, cm^2
-% Amref_RV  = adjvar(3) * 3.3 ; % RV midwall reference surface area, cm^2
 
 Amref_LV  = adjvar(1) * 2.077 ; % LV midwall reference surface area, cm^2
 Amref_SEP = adjvar(2) * Amref_LV * 0.590 ; % SEP midwall reference surface area, cm^2
@@ -94,16 +90,18 @@ Vw_LV = (LVW*2/3)/1000/1.05;
 Vw_SEP =(LVW/3)/1000/1.05;
 Vw_RV = RVW/1000/1.05;
 
-% V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-% V_RV  = edLV_target/1000;%
-V_LV  = 0.600;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-V_RV  = 0.600;%
-% 
+V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+V_RV  = edLV_target/1000;%
+% V_LV  = 0.600;% intial value for V_LV and V_RV assumed to be equal to edLV_target
+% V_RV  = 0.600;%
+% % 
 V_SA = 3.0;
 V_SV = 4.80;
 V_PA = 0.5;
 V_PV = 1.0; 
 V_Ao = 1.0;
+
+
 %% parameters for calculating ATPase rate
 Lsref = 1.9;
 k3      = 144.5586; % transition A3 to P rate constant, 1/sec
@@ -115,9 +113,7 @@ s3      = 9.9e-3;  % Strain at which k3 is minimum, um
 
 %% Run the energetics model to get the metabolite concentrations
 
-  energtics_output_LV  = EnergeticsModelScript(TAN_sham, CRtot_sham, TEP_sham, Ox_capacity_sham, tune_ATPase_LV);
-
-%     energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
+    energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
 %     energtics_output_SEP = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_SEP);
 %     energtics_output_RV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_RV);
 %     
@@ -407,6 +403,7 @@ rate_of_XB_turnover_ave = (Vw_LV*mean(r_LV) + Vw_SEP*mean(r_SEP))/(Vw_LV + Vw_SE
 % ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
 ATP_ase_mechannics_Averge_LV_SEP = (1.319/5.1267)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
 
+
 Fitting_error(4) = (edLV_target - max(1e3*V_LV))^2 / (edLV_target * max(1e3*V_LV));
 Fitting_error(5) = ((esLV_target - min(1e3*V_LV))^2 / (esLV_target * min(1e3*V_LV)));
 Fitting_error(6) = (94 - MAP)^2 / (94 * MAP);
@@ -434,7 +431,6 @@ xlabel('$t$ (sec)','interpreter','latex','fontsize',18)
 subplot(2,3,4); plot(t,P_LV,t,P_Ao,t,P_SA,t,P_PV);
 hold on; plot([0 1/(HR/60)],[max(P_Ao) max(P_Ao)],'k--',[0 1/(HR/60)],[max(P_Ao)+4*delta_p max(P_Ao)+4*delta_p],'k--'); hold off
 legend('P_{LV}','P_{Ao}','P_{SA}','P_{PV}','Max P_{Ao}','Max P_{LV}'); %set(gca,'Ylim',[0 125]);
-
 ylabel('$P$ (mmHg)','interpreter','latex','fontsize',18)
 xlabel('$t$ (sec)','interpreter','latex','fontsize',18)
 

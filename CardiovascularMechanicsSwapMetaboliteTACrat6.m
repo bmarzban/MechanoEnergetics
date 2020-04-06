@@ -2,7 +2,7 @@
 clear; 
 tic;
 %% chooosing the rat number (Mean Sham rat is Rat number 9,Mean TAC rat is number 19 )
-rat_number = 11
+rat_number = 15
 
 if rat_number<=9
     shamRat = 1;
@@ -72,13 +72,11 @@ CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as me
 % adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
 
 %% para set 4
-% adjvar = [1.2855 0.9205 1.5152 2.0812 1.3692*1 1.3692*1 1.320 0.49]; % Rat 11  % eta = 0.1(19 is mean TAC rat)
-% adjvar = [1.2855 0.9205 1.5152 2.0812*1.025 1.3692*0.73 1.3692*0.73 1.320 0.49]; % Rat 11 1.31 kstiff1  % eta = 0.1(19 is mean TAC rat)
-adjvar = [1.2855 0.9205 1.5152 1.52 1.3692*0.6 1.3692*0.6 1 0.49]; % Rat 11 Swap Metabolite 1.31 kstiff1  % eta = 0.1(19 is mean TAC rat)
+adjvar = [1.23 1.04 0.99 2.0812*0.63 1.3692*0.61 1.3692*0.61 1 0.5]; % Rat 15  1.31 kstiff1 % eta = 0.1(19 is mean TAC rat)
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV = 1.328* (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV = 1.352* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
 
