@@ -16,15 +16,15 @@ BW  = data(rat_number , 1); % g
 LVW = data(rat_number , 2); % mg
 RVW = data(rat_number , 3); % mg
 HR  = data(rat_number , 6); % beats/min
-
 edLV_target = data(rat_number , 13); % uL
 esLV_target = data(rat_number , 14); % uL
-
 SV_LV_target = edLV_target - esLV_target;
 CO_target = SV_LV_target / 1000 * HR;
 EF_LV_target = SV_LV_target / edLV_target * 100;
 TAN = data(rat_number,16)/1000; % mole/L cell
-CRtot = data(rat_number,18)/1000 ; % mole/L cell
+% CRtot = data(rat_number,18)/1000 ; % mole/L cell
+CRtot = 21.71/1000 ; % mole/L cell
+
 % TEP = data(rat_number,20)/1000; % mole/L cell
 Ox_capacity = data(rat_number,21)/data(9,21); 
 Ox_capacity_sham = 1; 
@@ -69,11 +69,13 @@ CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as me
 
 %% para set 4
 
-adjvar = [1.22 1.02 1.25 2.0812*1.46 1.1*0.84 1.1*0.84 2.2 0.8]; % Rat 16 1.31 kstiff % eta = 0.1(19 is mean TAC rat)
+% adjvar = [1.22 1.02 1.25 2.0812*1.46 1.1*0.84 1.1*0.84 2.2 0.8]; % Rat 16 1.31 kstiff % eta = 0.1(19 is mean TAC rat)
+% adjvar = [1.19 0.88 1.5 2.0812*1.4 1.3692*1.9 1.3692*1.9 1.65 0.8]; % Rat 16 1.31 kstiff1  % eta = 0.1(19 is mean TAC rat)
+adjvar = [1.312 0.93 1.4 2.0812*1.46 1.3692*1 1.3692*1 1.53 0.5]; % Rat 16 1.31 kstiff % eta = 0.1(19 is mean TAC rat)
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV = 0.69* (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV = 1.* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
 

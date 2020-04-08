@@ -72,14 +72,14 @@ end
 % adjvar = [1.005 1 1.02 0.938 1.06 1. 1.0]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
 
 %% para set 4
-% adjvar = [1.0 1 1.0 1.0 1.05 1.05 1.0 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
-adjvar = [1.05 1.01 1.05 1.09 0.83 0.83 1.0 1]; % Rat 10 %1.31 kstiff  % eta = 0.1(19 is mean TAC rat)
+% adjvar = [1.1 0.9 1.05 1.16 0.776 0.776 1.0 1]; % Rat 7 % eta = 0.1(19 is mean TAC rat)
+adjvar = [1.12 1.07 0.97 1.3 0.87 0.87 1.0 1]; % Rat 5  % eta = 0.1(19 is mean TAC rat)
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV =  1.319* (1/ 0.6801) *1.0e-3;
-tune_ATPase_SEP = tune_ATPase_LV;
-tune_ATPase_RV =  tune_ATPase_LV;
+tune_ATPase_LV =  1.195* (1/ 0.6801) *1.0e-3;
+% tune_ATPase_SEP = tune_ATPase_LV;
+% tune_ATPase_RV =  tune_ATPase_LV;
 
 Amref_LV  = adjvar(1) * 2.077 ; % LV midwall reference surface area, cm^2
 Amref_SEP = adjvar(2) * Amref_LV * 0.590 ; % SEP midwall reference surface area, cm^2
@@ -90,30 +90,40 @@ Amref_RV  = adjvar(3) * 3.3 ; % RV midwall reference surface area, cm^2
 % V_LV  = edLV_target/1000;% intial value for V_LV and V_RV assumed to be equal to edLV_target
 % V_RV  = edLV_target/1000;%
 V_LV  = 0.6;% intial value for V_LV and V_RV assumed to be equal to edLV_target
-V_RV  = 0.4;%
+V_RV  = 0.5;%
 
 Vw_LV = (LVW*2/3)/1000/1.05;
 Vw_SEP =(LVW/3)/1000/1.05;
 Vw_RV = RVW/1000/1.05;
 
 %% Run the energetics model to get the metabolite concentrations
+       energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, 0.835, tune_ATPase_LV);
 
-    energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
-    energtics_output_SEP = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_SEP);
-    energtics_output_RV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_RV);
-    
-    
+%        energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
+%     energtics_output_SEP = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_SEP);
+%     energtics_output_RV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_RV);
+%     
+%     
     MgATP_LV = energtics_output_LV(1);
     MgADP_LV = energtics_output_LV(2);
     Pi_LV = energtics_output_LV(10)*1000;
 
-    MgATP_SEP = energtics_output_SEP(1);
-    MgADP_SEP = energtics_output_SEP(2);
-    Pi_SEP = energtics_output_SEP(10)*1000;
-    
-    MgATP_RV = energtics_output_RV(1);
-    MgADP_RV = energtics_output_RV(2);
-    Pi_RV = energtics_output_RV(10)*1000;
+%     MgATP_SEP = energtics_output_SEP(1);
+%     MgADP_SEP = energtics_output_SEP(2);
+%     Pi_SEP = energtics_output_SEP(10)*1000;
+%     
+%     MgATP_RV = energtics_output_RV(1);
+%     MgADP_RV = energtics_output_RV(2);
+%     Pi_RV = energtics_output_RV(10)*1000;
+% 
+%    
+
+MgATP_SEP = MgATP_LV;
+MgADP_SEP = MgADP_LV;
+Pi_SEP = Pi_LV ;
+MgATP_RV = MgATP_LV;
+MgADP_RV = MgADP_LV;
+Pi_RV = Pi_LV ;
 
 
 %% Run cardiovascular mechanics model
@@ -230,21 +240,21 @@ M(4,4) = 0;
 input = [CO_target stim_period Vw_LV Vw_SEP Vw_RV R_TAC MgATP_LV MgADP_LV Pi_LV MgATP_SEP MgADP_SEP Pi_SEP MgATP_RV MgADP_RV Pi_RV A_HR B_HR C_HR Ca0_HR Amref_LV Amref_SEP Amref_RV];
 options = odeset('Mass',M,'RelTol',1e-6,'AbsTol',1e-6,'MaxStep',stim_period/50);
 [ts,ys] = ode15s(@dXdT_cardiovascular_mechanics,[0 120*stim_period],init,options,adjvar,input);
-% V_LV   = ys(:,8); % volume LV, mL
-% V_RV   = ys(:,9); % volume RV, mL
-% V_SV   = ys(:,43); % volume of systemic veins
-% V_PV   = ys(:,44); % volume of pulmonary veins
-% V_SA   = ys(:,45); % volume of systemic arterys
-% V_PA   = ys(:,46); % volume of pulmonary arterys
-% V_Ao   = ys(:,47); % volume of proximal aorta
-% V_T = V_LV + V_RV + V_SV + V_PV + V_SA + V_PA + V_Ao;
-% 
-% P_PV = V_PV/C_PV;
-% P_PA = V_PA/C_PA;
-% 
-%  figure(1); plot(ts,V_LV,ts,ys(:,11)); title('ventricular volumes')
-% % figure(2); plot(ts,(V_PV + V_PA)./V_T);
-% figure(3); plot(ts,P_PA,ts,P_PV); title('pulmonary pressures');
+V_LV   = ys(:,8); % volume LV, mL
+V_RV   = ys(:,9); % volume RV, mL
+V_SV   = ys(:,43); % volume of systemic veins
+V_PV   = ys(:,44); % volume of pulmonary veins
+V_SA   = ys(:,45); % volume of systemic arterys
+V_PA   = ys(:,46); % volume of pulmonary arterys
+V_Ao   = ys(:,47); % volume of proximal aorta
+V_T = V_LV + V_RV + V_SV + V_PV + V_SA + V_PA + V_Ao;
+
+P_PV = V_PV/C_PV;
+P_PA = V_PA/C_PA;
+
+ figure(11); plot(ts,V_LV,ts,ys(:,11)); title('ventricular volumes')
+figure(21); plot(ts,(V_PV + V_PA)./V_T);
+figure(31); plot(ts,P_PA,ts,P_PV); title('pulmonary pressures');
 init = ys(end,:);
 [t,Y] = ode15s(@dXdT_cardiovascular_mechanics,[0 1*stim_period],init,options,adjvar,input);
 

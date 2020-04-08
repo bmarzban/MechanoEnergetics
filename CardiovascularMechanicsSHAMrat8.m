@@ -72,12 +72,11 @@ end
 % adjvar = [1.005 1 1.02 0.938 1.06 1. 1.0]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
 
 %% para set 4
-% adjvar = [1.0 1 1.0 1.0 1.05 1.05 1.0 1]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
-adjvar = [0.92 0.95 0.88 1.7 0.92 0.92 1.0 1]; % Rat 8%1.31 kstiff  % eta = 0.1(19 is mean TAC rat)
+adjvar = [0.92 0.95 0.88 1.715 0.92 0.92 1.0 1]; % Rat 8%1.31 kstiff  % eta = 0.1(19 is mean TAC rat)
+tune_ATPase_LV =  1.3616* (1/ 0.6801) *1.0e-3;
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV =  1.360* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
 
