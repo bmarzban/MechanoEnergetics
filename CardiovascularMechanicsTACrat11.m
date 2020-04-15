@@ -73,8 +73,8 @@ CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as me
 
 %% para set 4
  
-adjvar = [1.31 1 1.5152 2.0812*0.8 1.3692*0.83 1.3692*0.83 1.190 0.49]; % Rat 20 1.31 kstiff1  % eta = 0.1(19 is mean TAC rat)
-tune_ATPase_LV = 1.15* (1/ 0.6801) *1.0e-3;
+adjvar = [1.357 0.95 1.56 2.0812*1.04 1.3692*0.93 1.3692*0.93 1.231 0.6]; % Rat 20 1.31 kstiff1  % eta = 0.1(19 is mean TAC rat)
+tune_ATPase_LV = 1.2167* (1/ 0.6801) *1.0e-3;
 
 
 R_TAC = adjvar(8)*R_TAC;
@@ -401,7 +401,7 @@ rate_of_XB_turnover_ave = (Vw_LV*mean(r_LV) + Vw_SEP*mean(r_SEP))/(Vw_LV + Vw_SE
 
 % unit convert to oxygen consumption
 % ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-ATP_ase_mechannics_Averge_LV_SEP = (1.319/5.1267)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
+ATP_ase_mechannics_Averge_LV_SEP = (1.327/5.1253)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
 
 
 Fitting_error(4) = (edLV_target - max(1e3*V_LV))^2 / (edLV_target * max(1e3*V_LV));

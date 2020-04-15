@@ -27,11 +27,6 @@ TAN = data(rat_number,16)/1000; % mole/L cell
 CRtot = data(rat_number,18)/1000; % mole/L cell
 % TEP = data(rat_number,20)/1000; % mole/L cell
 Ox_capacity = data(rat_number,21)/data(9,21); 
-Ox_capacity_sham = 1; 
-if rat_number<=9
-%     shamRat = 1;
-Ox_capacity = Ox_capacity_sham;
-end
 
 % Average sham
 TAN_sham = data(9,16)/1000; % mole/L cell
@@ -58,7 +53,7 @@ else
     R_TAC = 0;
 end
 
-% CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as mean sham , we had that the CO changed since we wanted to have the 
+CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as mean sham , we had that the CO changed since we wanted to have the 
 
 %% Adjustable variables
 %(Tune the following variables to fit the EDLV, ESLV, EDRV, ESLV, CO, ATP consumption Rate predicted by Ox-Phos and Mechanic model)
@@ -73,13 +68,13 @@ end
 % adjvar = [1.005 1 1.02 0.938 1.06 1. 1.0]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
 
 %% para set 4
-adjvar = [1.11 0.85 1.06 1.3 1.07 1.07 1 1]; % Rat 2  % eta = 0.1(19 is mean TAC rat)
+adjvar = [1.11*0.948 1.05*0.95 1.12*0.95 1.1 1.03 1.03 0.91 1]; % Rat 2  % eta = 0.1(19 is mean TAC rat)
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV =  1.4560* (1/ 0.6801) *1.0e-3;
-tune_ATPase_SEP = tune_ATPase_LV;
-tune_ATPase_RV =  tune_ATPase_LV;
+tune_ATPase_LV =  1.4265* (1/ 0.6801) *1.0e-3;
+% tune_ATPase_SEP = tune_ATPase_LV;
+% tune_ATPase_RV =  tune_ATPase_LV;
 
 Amref_LV  = adjvar(1) * 2.077 ; % LV midwall reference surface area, cm^2
 Amref_SEP = adjvar(2) * Amref_LV * 0.590 ; % SEP midwall reference surface area, cm^2
@@ -98,22 +93,31 @@ Vw_RV = RVW/1000/1.05;
 
 %% Run the energetics model to get the metabolite concentrations
 
-    energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
-    energtics_output_SEP = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_SEP);
-    energtics_output_RV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_RV);
-    
-    
+        energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
+%     energtics_output_SEP = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_SEP);
+%     energtics_output_RV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_RV);
+%     
+%     
     MgATP_LV = energtics_output_LV(1);
     MgADP_LV = energtics_output_LV(2);
     Pi_LV = energtics_output_LV(10)*1000;
 
-    MgATP_SEP = energtics_output_SEP(1);
-    MgADP_SEP = energtics_output_SEP(2);
-    Pi_SEP = energtics_output_SEP(10)*1000;
-    
-    MgATP_RV = energtics_output_RV(1);
-    MgADP_RV = energtics_output_RV(2);
-    Pi_RV = energtics_output_RV(10)*1000;
+%     MgATP_SEP = energtics_output_SEP(1);
+%     MgADP_SEP = energtics_output_SEP(2);
+%     Pi_SEP = energtics_output_SEP(10)*1000;
+%     
+%     MgATP_RV = energtics_output_RV(1);
+%     MgADP_RV = energtics_output_RV(2);
+%     Pi_RV = energtics_output_RV(10)*1000;
+% 
+%    
+
+MgATP_SEP = MgATP_LV;
+MgADP_SEP = MgADP_LV;
+Pi_SEP = Pi_LV ;
+MgATP_RV = MgATP_LV;
+MgADP_RV = MgADP_LV;
+Pi_RV = Pi_LV ;
 
 
 %% Run cardiovascular mechanics model
@@ -405,7 +409,7 @@ rate_of_XB_turnover_ave = (Vw_LV_W*mean(r_LV) + Vw_SEP_W*mean(r_SEP))/(Vw_LV_W +
 
 % unit convert to oxygen consumption
 % ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-ATP_ase_mechannics_Averge_LV_SEP = (1.319/5.1267)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
+ATP_ase_mechannics_Averge_LV_SEP = (1.327/5.1253)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
 
 % NA = 6.023e23; % Avogadro's number; per mol
 % nXB = 1e14*0.36e3; % No. of XBs per g muscle; Barclay etal Prog Biophys Mol Biol. 2010 Jan;102(1):53-71

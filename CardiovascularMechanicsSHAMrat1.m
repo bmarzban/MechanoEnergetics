@@ -27,11 +27,6 @@ TAN = data(rat_number,16)/1000; % mole/L cell
 CRtot = data(rat_number,18)/1000; % mole/L cell
 % TEP = data(rat_number,20)/1000; % mole/L cell
 Ox_capacity = data(rat_number,21)/data(9,21); 
-Ox_capacity_sham = 1; 
-if rat_number<=9
-%     shamRat = 1;
-Ox_capacity = Ox_capacity_sham;
-end
 
 % Average sham
 TAN_sham = data(9,16)/1000; % mole/L cell
@@ -58,7 +53,7 @@ else
     R_TAC = 0;
 end
 
-
+CO_target = 95;
 %% Adjustable variables
 %(Tune the following variables to fit the EDLV, ESLV, EDRV, ESLV, CO, ATP consumption Rate predicted by Ox-Phos and Mechanic model)
 
@@ -72,12 +67,12 @@ end
 % adjvar = [1.005 1 1.02 0.938 1.06 1. 1.0]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
 
 %% para set 4
-% adjvar = [1.1 0.9 1.05 1.16 0.776 0.776 1.0 1]; % Rat 7 % eta = 0.1(19 is mean TAC rat)
-adjvar = [1.12 1.07 0.97 1.3 0.87 0.87 1.0 1]; % Rat 5  % eta = 0.1(19 is mean TAC rat)
+
+adjvar = [0.975 1.02 0.96 1.315 0.91 0.91 1.005 1]; % Rat 1  % eta = 0.1(19 is mean TAC rat)
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV =  1.195* (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV =  1.266* (1/ 0.6801) *1.0e-3;
 % tune_ATPase_SEP = tune_ATPase_LV;
 % tune_ATPase_RV =  tune_ATPase_LV;
 
@@ -97,9 +92,8 @@ Vw_SEP =(LVW/3)/1000/1.05;
 Vw_RV = RVW/1000/1.05;
 
 %% Run the energetics model to get the metabolite concentrations
-       energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, 0.835, tune_ATPase_LV);
 
-%        energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
+     energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
 %     energtics_output_SEP = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_SEP);
 %     energtics_output_RV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_RV);
 %     
@@ -221,7 +215,7 @@ C_SV = 2.5; % Systemic venous compliance, mL/mmHg  DAB 10/7/2018
 C_PV = 0.25; % Pulmonary venous compliance, mL/mmHg
 C_PA = 0.013778; % Pulmonary arterial compliance, mL/mmHg
 R_Ao   = 2.5; % resistance of aorta , mmHg*sec/mL
-R_SA   = 88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
+R_SA   = adjvar(7)*88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
 % R_SA   = 2.25*88/CO_target*60;% mmHg*sec/mL; %  TAC #1
 R_PA   = 12/CO_target*60; % Pulmonary vasculature resistance, mmHg*sec/mL % Match the old code(9/5 BM) DAB change 9/15
 R_SV   = 0.25; 
@@ -240,21 +234,21 @@ M(4,4) = 0;
 input = [CO_target stim_period Vw_LV Vw_SEP Vw_RV R_TAC MgATP_LV MgADP_LV Pi_LV MgATP_SEP MgADP_SEP Pi_SEP MgATP_RV MgADP_RV Pi_RV A_HR B_HR C_HR Ca0_HR Amref_LV Amref_SEP Amref_RV];
 options = odeset('Mass',M,'RelTol',1e-6,'AbsTol',1e-6,'MaxStep',stim_period/50);
 [ts,ys] = ode15s(@dXdT_cardiovascular_mechanics,[0 120*stim_period],init,options,adjvar,input);
-V_LV   = ys(:,8); % volume LV, mL
-V_RV   = ys(:,9); % volume RV, mL
-V_SV   = ys(:,43); % volume of systemic veins
-V_PV   = ys(:,44); % volume of pulmonary veins
-V_SA   = ys(:,45); % volume of systemic arterys
-V_PA   = ys(:,46); % volume of pulmonary arterys
-V_Ao   = ys(:,47); % volume of proximal aorta
-V_T = V_LV + V_RV + V_SV + V_PV + V_SA + V_PA + V_Ao;
-
-P_PV = V_PV/C_PV;
-P_PA = V_PA/C_PA;
-
- figure(11); plot(ts,V_LV,ts,ys(:,11)); title('ventricular volumes')
-figure(21); plot(ts,(V_PV + V_PA)./V_T);
-figure(31); plot(ts,P_PA,ts,P_PV); title('pulmonary pressures');
+% V_LV   = ys(:,8); % volume LV, mL
+% V_RV   = ys(:,9); % volume RV, mL
+% V_SV   = ys(:,43); % volume of systemic veins
+% V_PV   = ys(:,44); % volume of pulmonary veins
+% V_SA   = ys(:,45); % volume of systemic arterys
+% V_PA   = ys(:,46); % volume of pulmonary arterys
+% V_Ao   = ys(:,47); % volume of proximal aorta
+% V_T = V_LV + V_RV + V_SV + V_PV + V_SA + V_PA + V_Ao;
+% 
+% P_PV = V_PV/C_PV;
+% P_PA = V_PA/C_PA;
+% 
+%  figure(11); plot(ts,V_LV,ts,ys(:,11)); title('ventricular volumes')
+% figure(21); plot(ts,(V_PV + V_PA)./V_T);
+% figure(31); plot(ts,P_PA,ts,P_PV); title('pulmonary pressures');
 init = ys(end,:);
 [t,Y] = ode15s(@dXdT_cardiovascular_mechanics,[0 1*stim_period],init,options,adjvar,input);
 
@@ -416,7 +410,7 @@ rate_of_XB_turnover_ave = (Vw_LV_W*mean(r_LV) + Vw_SEP_W*mean(r_SEP))/(Vw_LV_W +
 
 % unit convert to oxygen consumption
 % ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-ATP_ase_mechannics_Averge_LV_SEP = (1.319/5.1267)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
+ATP_ase_mechannics_Averge_LV_SEP = (1.327/5.1253)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
 
 % NA = 6.023e23; % Avogadro's number; per mol
 % nXB = 1e14*0.36e3; % No. of XBs per g muscle; Barclay etal Prog Biophys Mol Biol. 2010 Jan;102(1):53-71

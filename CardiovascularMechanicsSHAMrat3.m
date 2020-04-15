@@ -27,11 +27,6 @@ TAN = data(rat_number,16)/1000; % mole/L cell
 CRtot = data(rat_number,18)/1000; % mole/L cell
 % TEP = data(rat_number,20)/1000; % mole/L cell
 Ox_capacity = data(rat_number,21)/data(9,21); 
-Ox_capacity_sham = 1; 
-if rat_number<=9
-%     shamRat = 1;
-Ox_capacity = Ox_capacity_sham;
-end
 
 % Average sham
 TAN_sham = data(9,16)/1000; % mole/L cell
@@ -58,7 +53,7 @@ else
     R_TAC = 0;
 end
 
-
+CO_target = 95;
 %% Adjustable variables
 %(Tune the following variables to fit the EDLV, ESLV, EDRV, ESLV, CO, ATP consumption Rate predicted by Ox-Phos and Mechanic model)
 
@@ -72,11 +67,11 @@ end
 % adjvar = [1.005 1 1.02 0.938 1.06 1. 1.0]; % Rat 9  % eta = 0.1(19 is mean TAC rat)
 
 %% para set 4
-adjvar = [1.1 1.04 1.0 0.75 1.4 1.4 1.0 1]; % Rat 3  % eta = 0.1(19 is mean TAC rat)
+adjvar = [1.095 1.05 1.02  0.14 1.63 1.63 0.72 1]; % Rat 3  % eta = 0.1(19 is mean TAC rat)
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV =  1.397* (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV =  1.5269* (1/ 0.6801) *1.0e-3;
 % tune_ATPase_SEP = tune_ATPase_LV;
 % tune_ATPase_RV =  tune_ATPase_LV;
 
@@ -97,9 +92,8 @@ Vw_RV = RVW/1000/1.05;
 
 %% Run the energetics model to get the metabolite concentrations
 
-      energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, 0.8927, tune_ATPase_LV);
 
-%        energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
+      energtics_output_LV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_LV);
 %     energtics_output_SEP = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_SEP);
 %     energtics_output_RV  = EnergeticsModelScript(TAN, CRtot, TEP, Ox_capacity, tune_ATPase_RV);
 %     
@@ -219,7 +213,7 @@ C_SV = 2.5; % Systemic venous compliance, mL/mmHg  DAB 10/7/2018
 C_PV = 0.25; % Pulmonary venous compliance, mL/mmHg
 C_PA = 0.013778; % Pulmonary arterial compliance, mL/mmHg
 R_Ao   = 2.5; % resistance of aorta , mmHg*sec/mL
-R_SA   = 88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
+R_SA   = adjvar(7)*88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
 % R_SA   = 2.25*88/CO_target*60;% mmHg*sec/mL; %  TAC #1
 R_PA   = 12/CO_target*60; % Pulmonary vasculature resistance, mmHg*sec/mL % Match the old code(9/5 BM) DAB change 9/15
 R_SV   = 0.25; 

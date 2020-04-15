@@ -72,11 +72,11 @@ CO_target = 95; %change the Co to 95 to have the same Resitance paramters. as me
 % adjvar = [Reference area LV & Septal,  Reference area RV,  Blood volume, ksr, kforce, R_SA]
 
 %% para set 4
-adjvar = [1.3 1.13 1.3 1.5*1.3 1.18 1.18 1 0.6]; % Rat 18 %1.31 kstiff  % eta = 0.1(19 is mean TAC rat)
+adjvar = [1.29 0.94 1.24 1.395 0.91 0.91 1 0.6]; % Rat 18 %1.31 kstiff  % eta = 0.1(19 is mean TAC rat)
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV = 1.5464 * (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV = 1.5174 * (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
 
@@ -403,7 +403,7 @@ rate_of_XB_turnover_ave = (Vw_LV*mean(r_LV) + Vw_SEP*mean(r_SEP))/(Vw_LV + Vw_SE
 
 % unit convert to oxygen consumption
 % ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-ATP_ase_mechannics_Averge_LV_SEP = (1.319/5.1267)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
+ATP_ase_mechannics_Averge_LV_SEP = (1.327/5.1253)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
 
 Fitting_error(4) = (edLV_target - max(1e3*V_LV))^2 / (edLV_target * max(1e3*V_LV));
 Fitting_error(5) = ((esLV_target - min(1e3*V_LV))^2 / (esLV_target * min(1e3*V_LV)));

@@ -27,11 +27,11 @@ TAN = data(rat_number,16)/1000; % mole/L cell
 CRtot = data(rat_number,18)/1000; % mole/L cell
 % TEP = data(rat_number,20)/1000; % mole/L cell
 Ox_capacity = data(rat_number,21)/data(9,21); 
-Ox_capacity_sham = 1; 
-if rat_number<=9
-%     shamRat = 1;
-Ox_capacity = Ox_capacity_sham;
-end
+% Ox_capacity_sham = 1; 
+% if rat_number<=9
+% %     shamRat = 1;
+% Ox_capacity = Ox_capacity_sham;
+% end
 
 % Average sham
 TAN_sham = data(9,16)/1000; % mole/L cell
@@ -79,7 +79,7 @@ adjvar = [1.0 1 1.0 1.09 0.83 0.83 1.0 1]; % Rat 9 %1.31 kstiff  % eta = 0.1(19 
 
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV =  1.319* (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV =  1.327* (1/ 0.6801) *1.0e-3;
 tune_ATPase_SEP = tune_ATPase_LV;
 tune_ATPase_RV =  tune_ATPase_LV;
 
@@ -213,7 +213,7 @@ C_SV = 2.5; % Systemic venous compliance, mL/mmHg  DAB 10/7/2018
 C_PV = 0.25; % Pulmonary venous compliance, mL/mmHg
 C_PA = 0.013778; % Pulmonary arterial compliance, mL/mmHg
 R_Ao   = 2.5; % resistance of aorta , mmHg*sec/mL
-R_SA   = 88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
+R_SA   = adjvar(7)*88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
 % R_SA   = 2.25*88/CO_target*60;% mmHg*sec/mL; %  TAC #1
 R_PA   = 12/CO_target*60; % Pulmonary vasculature resistance, mmHg*sec/mL % Match the old code(9/5 BM) DAB change 9/15
 R_SV   = 0.25; 
@@ -408,8 +408,7 @@ rate_of_XB_turnover_ave = (Vw_LV_W*mean(r_LV) + Vw_SEP_W*mean(r_SEP))/(Vw_LV_W +
 
 % unit convert to oxygen consumption
 % ATP_ase_mechannics_Averge_LV_SEP = (1.319/6.6079)*rate_of_XB_turnover_ave % ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-ATP_ase_mechannics_Averge_LV_SEP = (1.319/5.1267)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
-
+ATP_ase_mechannics_Averge_LV_SEP = (1.327/5.1253)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
 % NA = 6.023e23; % Avogadro's number; per mol
 % nXB = 1e14*0.36e3; % No. of XBs per g muscle; Barclay etal Prog Biophys Mol Biol. 2010 Jan;102(1):53-71
 % J_ATPase_tissue_LV = J_ATP_LV*nXB/NA;% mole/sec/g tissue

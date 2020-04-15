@@ -34,8 +34,10 @@
 % x_ATPase = input(5); % ATP hydrolysis rate: M / s / (liter cytosol)
 
 % Arbitrary initial Cr and PCr values
-Cr = CRtot*0.99; % M per liter cell
-PCr = CRtot*0.01; % M per liter cell
+% Cr = CRtot*0.99; % M per liter cell
+% PCr = CRtot*0.01; % M per liter cell
+Cr = CRtot*0.7; % M per liter cell
+PCr = CRtot*0.3; % M per liter cell
 
 %% Set the desired temperature
 T = 37.5;
