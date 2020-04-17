@@ -5,7 +5,7 @@ flag_plot_figure = 1;
 flag_swap_metabolite = 0;
 
 %% chooosing the rat number (Mean Sham rat is Rat number 9,Mean TAC rat is number 19 )
-for rat_number = 15: 15
+for rat_number = 14: 14
 rat_number 
 if rat_number<=9
     shamRat = 1;
