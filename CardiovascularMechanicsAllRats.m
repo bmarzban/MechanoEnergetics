@@ -5,8 +5,8 @@ flag_plot_figure = 1;
 flag_swap_metabolite = 0;
 
 %% chooosing the rat number (Mean Sham rat is Rat number 9,Mean TAC rat is number 19 )
-for rat_number = 18: 19
-% rat_number = 9
+for rat_number = 15: 15
+rat_number 
 if rat_number<=9
     shamRat = 1;
     delta_p = 0;
@@ -506,7 +506,7 @@ end
 save(filename)
 end
 % save data to excel file 
-result_table(rat_number,:) =[rat_number, Pi_LV, MgATP_LV, MgADP_LV, EF_LV_sim, MAP, P_LV(end), dGrATPase_LV, CO_sim]
+result_table(rat_number,:) =[rat_number, Pi_LV, MgATP_LV, MgADP_LV, EF_LV_sim, MAP, P_LV(end), dGrATPase_LV, CO_sim];
 toc
 end
 
