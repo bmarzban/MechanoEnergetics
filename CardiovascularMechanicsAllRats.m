@@ -5,7 +5,7 @@ flag_plot_figure = 1;
 flag_swap_metabolite = 0;
 
 %% chooosing the rat number (Mean Sham rat is Rat number 9,Mean TAC rat is number 19 )
-for rat_number = 14: 14
+for rat_number = 1 : 1
 rat_number 
 if rat_number<=9
     shamRat = 1;
@@ -57,9 +57,9 @@ adjvar_all_swap = [1.0 1 1.0 1.09 0.83 0.83 1.0 1 1.327 0.6 0.5; % rat 1 SHAM - 
               1.3098 0.8585 0.975 1.25 0.8763 0.8763 1.0 0.55 1.387 0.6 0.5; % rat 12 TAC 3- SWAP Metabolite with mean SHAM
               1.08 0.97 1.0 1.18 1.0954 1.0954 1.0 0.55 1.660 0.6 0.5; % rat 13 TAC 4- SWAP Metabolite with mean SHAM
               1.4128 0.94 1.46 1.45 0.7161 0.7161 1.0 0.5 1.242 0.6 0.5; % rat 14 TAC 5- SWAP Metabolite with mean SHAM
-              1.12 0.95 1.34 1.495 1 1 1 0.54 1.607 0.6 0.5; % rat 15 TAC 6- SWAP Metabolite with mean SHAM
-              1.357 0.95 1.56 1.37 0.8694 0.8694 1. 0.6 1.532 0.6 0.5; % rat 16 TAC 7- SWAP Metabolite with mean SHAM
-              1.25 0.97 1.04 1.3528 0.825 0.825 1 0.5 1.366 0.6 0.5; % rat 17 TAC 8- SWAP Metabolite with mean SHAM
+              1.105 0.93 1.34 1.695 0.7 0.7 1 0.54 1.307 0.6 0.5; % rat 15 TAC 6- SWAP Metabolite with mean SHAM
+              1.25 0.97 1.04 1.3528 0.825 0.825 1 0.5 1.366 0.6 0.5; % rat 16 TAC 7- SWAP Metabolite with mean SHAM
+              1.357 0.95 1.56 1.37 0.8694 0.8694 1. 0.6 1.532 0.6 0.5; % rat 17 TAC 8- SWAP Metabolite with mean SHAM
               1.33 0.94 1.38 1.59 1.4 1.4 1. 0.623 1.719 0.6 0.6; % rat 18 TAC 9- SWAP Metabolite with mean SHAM
               1.29 0.94 1.24 1.395 0.91 0.91 1 0.6 1.5174 0.6 0.5; % rat 19 TAC 10- SWAP Metabolite with mean SHAM
               1.0 1 1.0 1.09 0.83 0.83 1.0 1 1.327 0.6 0.5]; % rat 20 Mean TAC

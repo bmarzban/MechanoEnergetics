@@ -16,7 +16,7 @@
 
 
 function dXdT = dXdT_cardiovascular_mechanics(t,x,adjvar,input)
-
+tic
 
 %% Parameters
 % freq = para(1);
@@ -513,8 +513,10 @@ dXdT(44) = (P_PA - P_PV)/R_PA - QIN_LV;  % V_PV
 dXdT(45) = Q_Ao - (P_SA - P_SV)/R_SA; % V_SA 
 dXdT(46) = QOUT_RV - (P_PA - P_PV)/R_PA; % V_PA 
 dXdT(47) = QOUT_LV - Q_Ao; % V_Ao
-
-
+% as=(toc-tic)
+% if (toc-tic)>10
+%    break
+% end
 dXdT = dXdT(:);
 
 

@@ -2,7 +2,7 @@
 clear; 
 tic;
 %% chooosing the rat number (Mean Sham rat is Rat number 9,Mean TAC rat is number 19 )
-rat_number = 19
+rat_number = 15
 
 if rat_number<=9
     shamRat = 1;
@@ -54,7 +54,7 @@ if shamRat == 0
     rho_blood = 1060; % kg/m^3
     delta_p = 0.5*(postV^2-preV^2)*rho_blood; % Pa
     delta_p = 0.0075*delta_p; % mmHg
-    if rat_number == 19
+    if rat_number == 15
         delta_p = 31.48;
     end
     R_TAC = delta_p/CO_target*60;

@@ -2,11 +2,11 @@
 clear; 
 tic;
 flag_plot_figure = 1;
-flag_swap_metabolite = 1;
+flag_swap_metabolite = 0;
 
 %% chooosing the rat number (Mean Sham rat is Rat number 9,Mean TAC rat is number 19 )
-for rat_number = 10: 20
-% rat_number = 9
+rat_number = 1;
+rat_number 
 if rat_number<=9
     shamRat = 1;
     delta_p = 0;
@@ -36,13 +36,12 @@ adjvar_all_rest =[ 0.975 1.02 0.96 1.315 0.91 0.91 1.005 1 1.266 0.6 0.5; % rat 
               1.3098 0.8585 0.9750 1.4568 1.3692 1.3692 1.02 0.55 1.252 0.6 0.5; % rat 12 TAC 3
               1.08 0.97 1.0 1.1676 2.5193 2.5193 1.08 0.55 1.461 0.6 0.5; % rat 13 TAC 4
               1.4128 0.94 1.46 2.2061 1.1515 1.1515 1.23 0.5 0.967 0.6 0.5; % rat 14 TAC 5
-              1.25 0.97 1.04 1.2071 1.4 1.40 0.93 0.5 1.437 0.6 0.5; % rat 15 TAC 6
-              1.13 0.8748 1.90 0.4162 6.5722 6.5722 1.630 0.8 1.2815 0.6 0.5; % rat 16 TAC 7
-              1.33    0.94    1.38  1.9947 1.27 1.27 1.15 0.623 1.465 0.6 0.5; % rat 17 TAC 8
-              1.29 0.94 1.24 1.3494 1.34 1.34 0.95 0.6 1.529 0.6 0.5; % rat 18 TAC 9
-              1.105 0.93 1.34 2.3101 0.891 0.891 2.28 0.54 0.861 0.6 0.5; % rat 19 TAC 10
-              1.357 0.95 1.56 2.1644 1.2734 1.2734 1.231 0.6 1.2167 0.6 0.5; % rat 20 TAC 11
-              1.0 1 1.0 1.09 0.83 0.83 1.0 1 1.327 0.6 0.5]; % rat 21 Mean TAC
+              1.105 0.93 1.34 2.3101 0.891 0.891 2.28 0.54 0.861 0.6 0.5; % rat 15 TAC 6
+              1.25 0.97 1.04 1.2071 1.4 1.40 0.93 0.5 1.437 0.6 0.5; % rat 16 TAC 7
+              1.357 0.95 1.56 2.1644 1.2734 1.2734 1.231 0.6 1.2167 0.6 0.5; % rat 17 TAC 8
+              1.33    0.94    1.38  1.9947 1.27 1.27 1.15 0.623 1.465 0.6 0.6; % rat 18 TAC 9
+              1.29 0.94 1.24 1.3494 1.34 1.34 0.95 0.6 1.529 0.6 0.5; % rat 19 TAC 10
+              1.0 1 1.0 1.09 0.83 0.83 1.0 1 1.327 0.6 0.5]; % rat 20 Mean TAC
               
 adjvar_all_swap = [1.0 1 1.0 1.09 0.83 0.83 1.0 1 1.327 0.6 0.5; % rat 1 SHAM - SWAP Metabolite with mean TAC
               1.0 1 1.0 1.09 0.83 0.83 1.0 1 1.327 0.6 0.5; % rat 2 SHAM - SWAP Metabolite with mean TAC
@@ -58,13 +57,12 @@ adjvar_all_swap = [1.0 1 1.0 1.09 0.83 0.83 1.0 1 1.327 0.6 0.5; % rat 1 SHAM - 
               1.3098 0.8585 0.975 1.25 0.8763 0.8763 1.0 0.55 1.387 0.6 0.5; % rat 12 TAC 3- SWAP Metabolite with mean SHAM
               1.08 0.97 1.0 1.18 1.0954 1.0954 1.0 0.55 1.660 0.6 0.5; % rat 13 TAC 4- SWAP Metabolite with mean SHAM
               1.4128 0.94 1.46 1.45 0.7161 0.7161 1.0 0.5 1.242 0.6 0.5; % rat 14 TAC 5- SWAP Metabolite with mean SHAM
-              1.25 0.97 1.04 1.3528 0.825 0.825 1 0.5 1.366 0.6 0.5; % rat 15 TAC 6- SWAP Metabolite with mean SHAM
-              1.33 0.94 1.38 1.59 1.4 1.4 1. 0.623 1.719 0.6 0.5; % rat 16 TAC 7- SWAP Metabolite with mean SHAM
-              1.33 0.94 1.38 1.59 1.4 1.4 1. 0.623 1.719 0.6 0.5; % rat 17 TAC 8- SWAP Metabolite with mean SHAM
-              1.29 0.94 1.24 1.395 0.91 0.91 1 0.6 1.5174 0.6 0.5; % rat 18 TAC 9- SWAP Metabolite with mean SHAM
-              1.12 0.95 1.34 1.495 1 1 1 0.54 1.607 0.6 0.5; % rat 19 TAC 10- SWAP Metabolite with mean SHAM
-              1.357 0.95 1.56 1.37 0.8694 0.8694 1. 0.6 1.532 0.6 0.5; % rat 20 TAC 11- SWAP Metabolite with mean SHAM
-              1.0 1 1.0 1.09 0.83 0.83 1.0 1 1.327 0.6 0.5]; % rat 21 Mean TAC
+              1.105 0.93 1.34 1.695 0.7 0.7 1 0.54 1.307 0.6 0.5; % rat 15 TAC 6- SWAP Metabolite with mean SHAM
+              1.25 0.97 1.04 1.3528 0.825 0.825 1 0.5 1.366 0.6 0.5; % rat 16 TAC 7- SWAP Metabolite with mean SHAM
+              1.357 0.95 1.56 1.37 0.8694 0.8694 1. 0.6 1.532 0.6 0.5; % rat 17 TAC 8- SWAP Metabolite with mean SHAM
+              1.33 0.94 1.38 1.59 1.4 1.4 1. 0.623 1.719 0.6 0.6; % rat 18 TAC 9- SWAP Metabolite with mean SHAM
+              1.29 0.94 1.24 1.395 0.91 0.91 1 0.6 1.5174 0.6 0.5; % rat 19 TAC 10- SWAP Metabolite with mean SHAM
+              1.0 1 1.0 1.09 0.83 0.83 1.0 1 1.327 0.6 0.5]; % rat 20 Mean TAC
           
 adjvar = adjvar_all_rest(rat_number,:);
 
@@ -129,11 +127,18 @@ end
 
 CO_target = 95; % ml/min
 MAP_target = 93.33; %mmHg taregt mean arterial pressure based on MAP = DBP +[1/3(SBP - DBP)];
-%% Adjustable variables
+SL_MAX_target = 2.2; % um
 
+%% Adjustable variables
+fitting_error = ones(8,1);
+convergence_criteria = 0.03; 
+iteration_number = 0;
+
+
+while sum(abs(fitting_error))>=convergence_criteria
 R_TAC = adjvar(8)*R_TAC;
 
-tune_ATPase_LV =  adjvar(9)* (1/ 0.6801) *1.0e-3;
+tune_ATPase_LV =  adjvar(9)* (1/ 0.6801) *1.0e-3; % ATP hydrolysis rate: M / s / (liter cytosol)
 
 Amref_LV  = adjvar(1) * 2.077 ; % LV midwall reference surface area, cm^2
 Amref_SEP = adjvar(2) * Amref_LV * 0.590 ; % SEP midwall reference surface area, cm^2
@@ -195,6 +200,13 @@ Ca0_HR_pchip = pchip(freq_all,para_fitted_Ca(5,:));
 Ca0_HR = ppval(Ca0_HR_pchip,HR/60);
 
 stim_period = 1/(HR/60);
+M = speye(47);
+M(1,1) = 0;
+M(2,2) = 0;
+M(3,3) = 0;
+M(4,4) = 0; 
+input = [CO_target stim_period Vw_LV Vw_SEP Vw_RV R_TAC MgATP_LV MgADP_LV Pi_LV MgATP_SEP MgADP_SEP Pi_SEP MgATP_RV MgADP_RV Pi_RV A_HR B_HR C_HR Ca0_HR Amref_LV Amref_SEP Amref_RV];
+options = odeset('Mass',M,'RelTol',1e-6,'AbsTol',1e-6,'MaxStep',stim_period/50);
 
 xm_LV   = -0.60;
 xm_SEP  = 0.40;
@@ -204,6 +216,7 @@ ym    = 0.50;
 SL_LV  = 2.2;
 SL_SEP = 2.2;
 SL_RV  = 2.2;
+
 
 V_SA = 3.0;
 V_SV = 4.80;
@@ -245,42 +258,27 @@ P3_2_SEP = 0; % 2nd moment state A3, LV
 N_SEP = 1;
 U_NR_SEP = 0;
 
+
 init = [xm_LV ,xm_SEP ,xm_RV ,ym , SL_LV, SL_SEP, SL_RV, V_LV, V_RV, ...
        P1_0_LV, P1_1_LV, P1_2_LV ,P2_0_LV, P2_1_LV, P2_2_LV, P3_0_LV, P3_1_LV, P3_2_LV, N_LV, U_NR_LV,...
        P1_0_SEP,P1_1_SEP,P1_2_SEP,P2_0_SEP,P2_1_SEP,P2_2_SEP,P3_0_SEP,P3_1_SEP,P3_2_SEP,N_SEP,U_NR_SEP,...
        P1_0_RV, P1_1_RV, P1_2_RV, P2_0_RV, P2_1_RV, P2_2_RV, P3_0_RV, P3_1_RV, P3_2_RV, N_RV, U_NR_RV,...
        V_SV, V_PV ,V_SA ,V_PA, V_Ao]';
 
-opts = optimset('Display','iter','MaxFunEvals',100000,'MaxIter',10000);
-TrisegEquations(init(1:4),Vw_LV,Vw_SEP,Vw_RV,SL_LV,SL_SEP,SL_RV,V_LV,V_RV,Amref_LV,Amref_SEP,Amref_RV);
-x = fsolve(@TrisegEquations,init(1:4),opts,Vw_LV,Vw_SEP,Vw_RV,SL_LV,SL_SEP,SL_RV,V_LV,V_RV,Amref_LV,Amref_SEP,Amref_RV);
-init(1:4) = x;
-% Lumped circulatory parameters
-C_Ao = 0.0022045;  % Proximal aortic compliance, mL/mmHg
-C_SA = 0.0077157; % Systemic arterial compliance, mL/mmHg
-C_SV = 2.5; % Systemic venous compliance, mL/mmHg  DAB 10/7/2018
-C_PV = 0.25; % Pulmonary venous compliance, mL/mmHg
-C_PA = 0.013778; % Pulmonary arterial compliance, mL/mmHg
-R_Ao   = 2.5; % resistance of aorta , mmHg*sec/mL
-R_SA   = adjvar(7)*88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
-% R_SA   = 2.25*88/CO_target*60;% mmHg*sec/mL; %  TAC #1
-R_PA   = 12/CO_target*60; % Pulmonary vasculature resistance, mmHg*sec/mL % Match the old code(9/5 BM) DAB change 9/15
-R_SV   = 0.25; 
-R_PV   = 0.25; 
-R_vlv  = 0.05; %  valve resistance, mmHg*sec/mL
-R_AV   = R_vlv + R_TAC; % resistance across aortic valve
-R_tAo  = 0.5;
-R_tSA  = 4;
-Kse    = 50000; % series element elastance, mmHg/micron (Changed to match the value in Tewari's code) (9/5 BM)
+if iteration_number == 0 
+ 
+    opts = optimset('Display','iter','MaxFunEvals',100000,'MaxIter',10000);
+    TrisegEquations(init(1:4),Vw_LV,Vw_SEP,Vw_RV,SL_LV,SL_SEP,SL_RV,V_LV,V_RV,Amref_LV,Amref_SEP,Amref_RV);
+    x = fsolve(@TrisegEquations,init(1:4),opts,Vw_LV,Vw_SEP,Vw_RV,SL_LV,SL_SEP,SL_RV,V_LV,V_RV,Amref_LV,Amref_SEP,Amref_RV);
+    init(1:4) = x;
 
-M = speye(47);
-M(1,1) = 0;
-M(2,2) = 0;
-M(3,3) = 0;
-M(4,4) = 0; 
-input = [CO_target stim_period Vw_LV Vw_SEP Vw_RV R_TAC MgATP_LV MgADP_LV Pi_LV MgATP_SEP MgADP_SEP Pi_SEP MgATP_RV MgADP_RV Pi_RV A_HR B_HR C_HR Ca0_HR Amref_LV Amref_SEP Amref_RV];
-options = odeset('Mass',M,'RelTol',1e-6,'AbsTol',1e-6,'MaxStep',stim_period/50);
-[ts,ys] = ode15s(@dXdT_cardiovascular_mechanics,[0 120*stim_period],init,options,adjvar,input);
+    [ts,ys] = ode15s(@dXdT_cardiovascular_mechanics,[0 120*stim_period],init,options,adjvar,input);
+else
+  
+    init(1:4) = x;
+
+    [ts,ys] = ode15s(@dXdT_cardiovascular_mechanics,[0 12*stim_period],init,options,adjvar,input);
+end
 % V_LV   = ys(:,8); % volume LV, mL
 % V_RV   = ys(:,9); % volume RV, mL
 % V_SV   = ys(:,43); % volume of systemic veins
@@ -355,6 +353,24 @@ V_Ao   = Y(:,47); % volume of proximal aorta
 V_T = V_LV + V_RV + V_SV + V_PV + V_SA + V_PA + V_Ao;
 
 % PlotTriSeg(xm_LV,xm_SEP,xm_RV,ym,t)
+% Lumped circulatory parameters
+C_Ao = 0.0022045;  % Proximal aortic compliance, mL/mmHg
+C_SA = 0.0077157; % Systemic arterial compliance, mL/mmHg
+C_SV = 2.5; % Systemic venous compliance, mL/mmHg  DAB 10/7/2018
+C_PV = 0.25; % Pulmonary venous compliance, mL/mmHg
+C_PA = 0.013778; % Pulmonary arterial compliance, mL/mmHg
+R_Ao   = 2.5; % resistance of aorta , mmHg*sec/mL
+R_SA   = adjvar(7)*88/CO_target*60;% mmHg*sec/mL; % Systemic vasculature resistance, mmHg*sec/mL
+% R_SA   = 2.25*88/CO_target*60;% mmHg*sec/mL; %  TAC #1
+R_PA   = 12/CO_target*60; % Pulmonary vasculature resistance, mmHg*sec/mL % Match the old code(9/5 BM) DAB change 9/15
+R_SV   = 0.25; 
+R_PV   = 0.25; 
+R_vlv  = 0.05; %  valve resistance, mmHg*sec/mL
+R_AV   = R_vlv + R_TAC; % resistance across aortic valve
+R_tAo  = 0.5;
+R_tSA  = 4;
+Kse    = 50000; % series element elastance, mmHg/micron (Changed to match the value in Tewari's code) (9/5 BM)
+
 %  Pulmonary Pressures
 P_PV = V_PV/C_PV;
 P_SV = V_SV/C_SV;
@@ -457,12 +473,20 @@ rate_of_XB_turnover_ave = (Vw_LV_W*mean(r_LV) + Vw_SEP_W*mean(r_SEP))/(Vw_LV_W +
 
 % unit convert to oxygen consumption
 ATP_ase_mechannics_Averge_LV_SEP = (1.327/5.1253)*rate_of_XB_turnover_ave %  1.31 Kstiff - ATP hydrolized (mmol/s/(L cell)) per X-bridge turnover rate in LV
+%% Calculation of the error
+SL_LV_MAX = max(SL_LV);
+SL_SEP_MAX = max(SL_SEP);
+SL_RV_MAX = max(SL_RV);
 
-Fitting_error(1) = (edLV_target - max(1e3*V_LV))^2 / (edLV_target * max(1e3*V_LV)); % check error on edLV
-Fitting_error(2) = ((esLV_target - min(1e3*V_LV))^2 / (esLV_target * min(1e3*V_LV)));% check error on esLV
-Fitting_error(3) = ( MAP_target- MAP)^2 / (MAP_target * MAP); % MAP error
-Fitting_error(4) = ((SV_LV_target - SV_LV_sim)^2 / (SV_LV_target * SV_LV_sim)); % check relative error on stroke volume
-
+fitting_error(1) = (adjvar(9)- ATP_ase_mechannics_Averge_LV_SEP)/ATP_ase_mechannics_Averge_LV_SEP;
+fitting_error(2) = (SL_MAX_target - SL_LV_MAX) / SL_MAX_target; % check error on SL_LV
+fitting_error(3) = (SL_MAX_target - SL_SEP_MAX) / SL_MAX_target; % check error on SL_SEP
+fitting_error(4) =  (SL_MAX_target - SL_RV_MAX) / SL_MAX_target; %check error on SL_RV
+fitting_error(5) = (edLV_target - max(1e3*V_LV)) / edLV_target; % check error on edLV
+fitting_error(6) = (esLV_target - min(1e3*V_LV)) / esLV_target; % check error on esLV
+fitting_error(7) = ( MAP_target- MAP) / MAP_target; % MAP error
+fitting_error(8) = (SV_LV_target - SV_LV_sim)/ SV_LV_target; % check relative error on stroke volume
+fitting_error(9) = ((max(P_LV) - (max(P_Ao)+4*delta_p))/(max(P_Ao)+4*delta_p))*(1- shamRat); % check the errors for the TAC rats
 % [MAP max(V_LV) min(V_LV) P_LV(end)]
 
 if flag_plot_figure == 1
@@ -499,29 +523,22 @@ text(0.2,0.9,txt_SV)
 title(['MAP = ', num2str(MAP),' mmHg']);
 set(h1,'Position',[50 50 1250 600])
 
+end
 
+adjvar = adjvar + rand(1,size(adjvar,2))/100;
+adjvar = adjvar - rand(1,size(adjvar,2))/100;
+iteration_number = iteration_number + 1
+sum(abs(fitting_error))
 
-filename = strcat(pwd,'\results\rest\rat',num2str(rat_number));
-save(filename)
+end
+%% save simulation result
 if flag_swap_metabolite == 1
          filename = strcat(pwd,'\results\rest\rat_swap',num2str(rat_number));
-         save(filename)
     else 
-      filename = strcat(pwd,'\results\rest\rat',num2str(rat_number));
-      save(filename)
+         filename = strcat(pwd,'\results\rest\rat',num2str(rat_number)); 
 end
-end
-% save data to excel file 
-result_table(rat_number,:) =[rat_number, Pi_LV, MgATP_LV, MgADP_LV, EF_LV_sim, MAP, P_LV(end), dGrATPase_LV, CO_sim]
-toc
-end
+save(filename)
 
-if flag_swap_metabolite == 1
-        excel_file_name = 'Result_table_swap.xlsx';
-        xlRange = 'A2:I21';
-        xlswrite(excel_file_name,result_table,xlRange)
-    else 
-        excel_file_name = 'Result_table_rest.xlsx';
-        xlRange = 'A2:I21';
-        xlswrite(excel_file_name,result_table,xlRange)
-end
+% save data to excel file 
+result_table(rat_number,:) =[rat_number, Pi_LV, MgATP_LV, MgADP_LV, EF_LV_sim, MAP, P_LV(end), dGrATPase_LV, CO_sim];
+toc
