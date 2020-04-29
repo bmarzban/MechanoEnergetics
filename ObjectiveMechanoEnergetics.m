@@ -101,7 +101,8 @@ M(2,2) = 0;
 M(3,3) = 0;
 M(4,4) = 0; 
 input = [CO_target stim_period Vw_LV Vw_SEP Vw_RV R_TAC MgATP_LV MgADP_LV Pi_LV MgATP_SEP MgADP_SEP Pi_SEP MgATP_RV MgADP_RV Pi_RV A_HR B_HR C_HR Ca0_HR Amref_LV Amref_SEP Amref_RV];
-options = odeset('Mass',M,'RelTol',1e-6,'AbsTol',1e-6,'MaxStep',stim_period/50);
+%  options = odeset('Mass',M,'RelTol',1e-5,'AbsTol',1e-5,'MaxStep',stim_period/50,'OutputFcn',@odeprint);
+options = odeset('Mass',M,'MassSingular','yes','RelTol',1e-5,'AbsTol',1e-5,'MaxStep',stim_period/50);
 
 xm_LV   = -0.60;
 xm_SEP  = 0.40;
@@ -373,8 +374,7 @@ fitting_error(9) = ((max(P_LV) - (max(P_Ao)+4*delta_p))/(max(P_Ao)+4*delta_p))*(
 fitness = sum(abs(fitting_error))
 catch
 xx=x
-%     error_x = disp(x)
-    fitness = 1e4
+fitness = 1e4
 end
 if isnan(fitness) == 1;
 fitness = 1e5

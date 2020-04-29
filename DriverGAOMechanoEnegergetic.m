@@ -135,14 +135,14 @@ gaoptions = optimoptions('ga','MaxGenerations',50,'Display','iter');
 gaoptions = optimoptions(gaoptions,'UseParallel',true);
 gaoptions = optimoptions(gaoptions,'PopulationSize',100);
 gaoptions = optimoptions(gaoptions,'FunctionTolerance',1e-3);
-% gaoptions = optimoptions(gaoptions,'OutputFcn',@GA_DISP);
+% gaoptions = optimoptions(gaoptions,'OutputFcn',@GA_DISP)
 lb = adjvar - adjvar/2;
 ub = adjvar + adjvar/2;
 
 numberOfVariables =11;
 ConstraintFunction = [];
 ObjectiveMechanoEnergetics = @ObjectiveMechanoEnergetics;
-% adjvar1 = ga(ObjectiveMechanoEnergetics,numberOfVariables,[],[],[],[],lb,ub,ConstraintFunction,gaoptions)
-adjvar1 = [1.4295    0.8617    0.8780    1.7048    0.6988    0.7069    1.2274 0.6248    0.7598    0.6009    0.5305]
-fitness = ObjectiveMechanoEnergetics(adjvar1)
+adjvar1 = ga(ObjectiveMechanoEnergetics,numberOfVariables,[],[],[],[],lb,ub,ConstraintFunction,gaoptions)
+% adjvar1 = [1.4295    0.8617    0.8780    1.7048    0.6988    0.7069    1.2274 0.6248    0.7598    0.6009    0.5305]
+fitness = ObjectiveMechanoEnergetics(adjvar)
 toc

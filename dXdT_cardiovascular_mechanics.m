@@ -16,7 +16,6 @@
 
 
 function dXdT = dXdT_cardiovascular_mechanics(t,x,adjvar,input)
-tic
 
 %% Parameters
 % freq = para(1);
@@ -381,6 +380,7 @@ dXdT(2) = (Tx_LV + Tx_SEP + Tx_RV); %
 dXdT(3) = (V_RV + 0.5*Vw_RV + 0.5*Vw_SEP + Vm_SEP - Vm_RV)/V_LV; % 
 dXdT(4) = (Ty_LV + Ty_SEP + Ty_RV);  %
 
+
 %% Myofiber Mechanics: SL_LV
 
 % Calculations for stretch-senstive rates    
@@ -513,10 +513,13 @@ dXdT(44) = (P_PA - P_PV)/R_PA - QIN_LV;  % V_PV
 dXdT(45) = Q_Ao - (P_SA - P_SV)/R_SA; % V_SA 
 dXdT(46) = QOUT_RV - (P_PA - P_PV)/R_PA; % V_PA 
 dXdT(47) = QOUT_LV - Q_Ao; % V_Ao
-% as=(toc-tic)
-% if (toc-tic)>10
-%    break
-% end
+% as=(toc-tic);
+if sum(abs(dXdT))>10e12
+%    return
+    dXdT = gibberish
+end
+
+
 dXdT = dXdT(:);
 
 
